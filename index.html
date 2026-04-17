@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Repositório de Campanha — Diagnóstico de Maturidade de RH · Gupy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --azul:    #00122f;
+      --anil:    #003cfd;
+      --verde:   #cdff82;
+      --branco:  #ffffff;
+      --cinza-1: #f4f6fb;
+      --cinza-2: #e8edf7;
+      --cinza-3: #c2cde6;
+      --cinza-4: #7a8ab0;
+      --texto:   #0d1f40;
+      --radius:  10px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cinza-1);
+      color: var(--texto);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ── HEADER ─────────────────────────────────────────────────────── */
+    .header {
+      background: var(--azul);
+      padding: 56px 0 48px;
+      text-align: center;
+    }
+    .header-inner { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+    .badge-interno {
+      display: inline-block;
+      background: rgba(205,255,130,.15);
+      color: var(--verde);
+      border: 1px solid rgba(205,255,130,.35);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      color: var(--branco);
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .header h1 span { color: var(--verde); }
+    .header p {
+      color: var(--cinza-3);
+      font-size: 15px;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .header-meta {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+    .header-meta span {
+      color: var(--cinza-4);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .header-meta strong { color: var(--cinza-3); }
+
+    /* ── NAV ─────────────────────────────────────────────────────────── */
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--azul);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .nav {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav::-webkit-scrollbar { display: none; }
+    .nav a {
+      color: rgba(255,255,255,.55);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 12px 14px;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      border-radius: 6px 6px 0 0;
+      transition: color .2s, border-color .2s, background .2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav a:hover { color: var(--branco); background: rgba(255,255,255,.07); border-bottom-color: var(--anil); }
+    .nav a .nav-icon { font-size: 15px; line-height: 1; }
+
+    /* ── LAYOUT ──────────────────────────────────────────────────────── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    section { padding: 64px 0; }
+    section + section { border-top: 1px solid var(--cinza-2); }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--anil);
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 800;
+      color: var(--azul);
+      margin-bottom: 6px;
+    }
+    .section-desc {
+      color: var(--cinza-4);
+      font-size: 14px;
+      margin-bottom: 40px;
+      max-width: 560px;
+    }
+
+    /* ── CARDS ───────────────────────────────────────────────────────── */
+    .card {
+      background: var(--branco);
+      border: 1px solid var(--cinza-2);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+    .card-grid {
+      display: grid;
+      gap: 20px;
+    }
+    .card-grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+    .card-grid-3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+
+    /* ── STATS ROW ───────────────────────────────────────────────────── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .stat {
+      background: var(--azul);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+    }
+    .stat-label { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--cinza-4); margin-bottom: 6px; }
+    .stat-value { font-size: 22px; font-weight: 800; color: var(--branco); line-height: 1.1; }
+    .stat-sub { font-size: 12px; color: var(--cinza-4); margin-top: 3px; }
+
+    /* ── TABLES ──────────────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--cinza-2); }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    thead { background: var(--azul); }
+    thead th { color: var(--branco); font-weight: 600; padding: 12px 16px; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+    tbody tr:nth-child(even) { background: var(--cinza-1); }
+    tbody td { padding: 11px 16px; color: var(--texto); border-top: 1px solid var(--cinza-2); vertical-align: top; }
+    tbody tr:hover td { background: #eef2ff; }
+
+    /* ── PLATFORM SECTION ────────────────────────────────────────────── */
+    .platform-block { margin-bottom: 48px; }
+    .platform-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .platform-icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 800; color: var(--branco);
+      flex-shrink: 0;
+    }
+    .pi-li { background: #0a66c2; }
+    .pi-meta { background: #1877f2; }
+    .pi-google { background: #ea4335; }
+    .platform-name { font-size: 18px; font-weight: 700; color: var(--azul); }
+    .platform-spec { font-size: 12px; color: var(--cinza-4); margin-top: 2px; }
+
+    /* ── AD CARDS ────────────────────────────────────────────────────── */
+    .ad-cards { display: grid; gap: 16px; }
+    .ad-card {
+      background: var(--branco);
+      border: 1px solid var(--cinza-2);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .ad-card-head {
+      background: var(--cinza-1);
+      border-bottom: 1px solid var(--cinza-2);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .ad-angle { font-size: 13px; font-weight: 700; color: var(--azul); }
+    .ad-angle-sub { font-size: 12px; color: var(--cinza-4); font-style: italic; margin-top: 1px; }
+    .ad-body { padding: 20px; }
+    .ad-field { margin-bottom: 16px; }
+    .ad-field:last-child { margin-bottom: 0; }
+    .ad-field-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      color: var(--cinza-4);
+      margin-bottom: 6px;
+    }
+    .ad-field-content {
+      font-size: 14px;
+      color: var(--texto);
+      line-height: 1.65;
+      background: var(--cinza-1);
+      border: 1px solid var(--cinza-2);
+      border-radius: 6px;
+      padding: 12px 14px;
+    }
+    .ad-field-content.headline {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--azul);
+      background: #eef2ff;
+      border-color: #c7d2f8;
+    }
+    .ad-field-content.cta-text {
+      display: inline-block;
+      background: var(--anil);
+      color: var(--branco);
+      border-color: transparent;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 8px 16px;
+      border-radius: 6px;
+    }
+    .copy-btn {
+      background: transparent;
+      border: 1px solid var(--cinza-3);
+      color: var(--cinza-4);
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all .15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .copy-btn:hover { background: var(--anil); border-color: var(--anil); color: var(--branco); }
+    .copy-btn.copied { background: #16a34a; border-color: #16a34a; color: var(--branco); }
+
+    /* ── GOOGLE HEADLINES ────────────────────────────────────────────── */
+    .headlines-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .headline-chip {
+      background: var(--branco);
+      border: 1px solid var(--cinza-2);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--texto);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .headline-num { font-size: 10px; font-weight: 700; color: var(--cinza-4); margin-top: 2px; flex-shrink: 0; }
+
+    /* ── CRO SECTION ─────────────────────────────────────────────────── */
+    .cro-list { list-style: none; display: grid; gap: 16px; }
+    .cro-item {
+      background: var(--branco);
+      border: 1px solid var(--cinza-2);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+    .cro-num {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 800;
+      flex-shrink: 0;
+    }
+    .cro-high .cro-num { background: #fef2f2; color: #dc2626; }
+    .cro-mid .cro-num  { background: #fffbeb; color: #d97706; }
+    .cro-low .cro-num  { background: #f0fdf4; color: #16a34a; }
+    .cro-item h4 { font-size: 14px; font-weight: 700; color: var(--azul); margin-bottom: 6px; }
+    .cro-item p  { font-size: 13px; color: var(--cinza-4); line-height: 1.55; }
+    .cro-item blockquote {
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: var(--cinza-1);
+      border-left: 3px solid var(--anil);
+      border-radius: 0 6px 6px 0;
+      font-size: 13px;
+      color: var(--texto);
+      font-style: italic;
+    }
+    .cro-options { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .cro-option {
+      background: #eef2ff;
+      color: var(--anil);
+      border: 1px solid #c7d2f8;
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .keep-list { display: grid; gap: 10px; }
+    .keep-item {
+      background: var(--branco);
+      border: 1px solid var(--cinza-2);
+      border-left: 3px solid #16a34a;
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      font-size: 14px;
+      color: var(--texto);
+    }
+    .keep-item strong { color: var(--azul); }
+
+    .ab-table-wrap { margin-top: 24px; }
+
+    /* ── NAMING / CODE ────────────────────────────────────────────────── */
+    .code-block {
+      background: var(--azul);
+      color: #a8c4ff;
+      font-family: 'SF Mono', 'Fira Mono', monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      padding: 20px 24px;
+      border-radius: var(--radius);
+      overflow-x: auto;
+    }
+    .code-block span { color: var(--verde); }
+
+    /* ── ALERTS / BENCHMARKS ─────────────────────────────────────────── */
+    .alert {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      font-size: 13px;
+      color: #92400e;
+      margin-top: 16px;
+    }
+    .alert strong { color: #78350f; }
+    .sinais-list { list-style: none; display: grid; gap: 8px; margin-top: 16px; }
+    .sinal {
+      background: var(--branco);
+      border: 1px solid var(--cinza-2);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--texto);
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .sinal-dot { width: 8px; height: 8px; border-radius: 50%; background: #ef4444; flex-shrink: 0; margin-top: 5px; }
+
+    /* ── CHECKLIST ───────────────────────────────────────────────────── */
+    .checklist-group { margin-bottom: 28px; }
+    .checklist-group h4 { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--anil); margin-bottom: 12px; }
+    .check-items { display: grid; gap: 8px; }
+    .check-item {
+      background: var(--branco);
+      border: 1px solid var(--cinza-2);
+      border-radius: 8px;
+      padding: 11px 16px;
+      font-size: 13px;
+      color: var(--texto);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .check-box {
+      width: 18px; height: 18px;
+      border: 2px solid var(--cinza-3);
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    /* ── DIVIDER ─────────────────────────────────────────────────────── */
+    .divider { border: none; border-top: 1px solid var(--cinza-2); margin: 40px 0; }
+
+    /* ── FOOTER ──────────────────────────────────────────────────────── */
+    .footer {
+      background: var(--azul);
+      text-align: center;
+      padding: 28px 24px;
+      color: var(--cinza-4);
+      font-size: 13px;
+    }
+    .footer strong { color: var(--cinza-3); }
+
+    /* ── PHASE BADGES ────────────────────────────────────────────────── */
+    .phase-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .phase-1 { background: #fef2f2; color: #dc2626; }
+    .phase-2 { background: #fffbeb; color: #d97706; }
+    .phase-3 { background: #f0fdf4; color: #16a34a; }
+
+    /* ── ACCORDION ───────────────────────────────────────────────────── */
+    .accordion { display: grid; gap: 12px; }
+    .acc-item {
+      background: var(--branco);
+      border: 1px solid var(--cinza-2);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .acc-trigger {
+      width: 100%;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+      transition: background .15s;
+    }
+    .acc-trigger:hover { background: var(--cinza-1); }
+    .acc-trigger.open { background: var(--azul); }
+    .acc-trigger-left { display: flex; align-items: center; gap: 14px; }
+    .acc-num {
+      width: 32px; height: 32px;
+      background: var(--cinza-2);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 800; color: var(--azul);
+      flex-shrink: 0; transition: background .15s, color .15s;
+    }
+    .acc-trigger.open .acc-num { background: rgba(255,255,255,.15); color: var(--verde); }
+    .acc-title { font-size: 15px; font-weight: 700; color: var(--azul); }
+    .acc-sub   { font-size: 12px; color: var(--cinza-4); margin-top: 2px; font-style: italic; }
+    .acc-trigger.open .acc-title,
+    .acc-trigger.open .acc-sub { color: var(--branco); }
+    .acc-trigger.open .acc-sub { color: var(--cinza-3); }
+    .acc-icon {
+      font-size: 22px; font-weight: 300; color: var(--cinza-4);
+      line-height: 1; flex-shrink: 0; transition: transform .25s, color .15s;
+    }
+    .acc-trigger.open .acc-icon { transform: rotate(45deg); color: var(--verde); }
+    .acc-body {
+      display: none;
+      padding: 0 24px 28px;
+      border-top: 1px solid var(--cinza-2);
+    }
+    .acc-body.open { display: block; }
+
+    /* ── BRIEF BLOCKS ────────────────────────────────────────────────── */
+    .brief-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+    @media (max-width: 768px) { .brief-grid { grid-template-columns: 1fr; } }
+    .brief-block { margin-top: 24px; }
+    .brief-block-title {
+      font-size: 11px; font-weight: 700; letter-spacing: .09em;
+      text-transform: uppercase; color: var(--anil);
+      margin-bottom: 12px; padding-bottom: 8px;
+      border-bottom: 1px solid var(--cinza-2);
+    }
+    .conceito-box {
+      background: var(--cinza-1);
+      border-left: 3px solid var(--anil);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      font-size: 13px; color: var(--texto); line-height: 1.65;
+      margin-top: 20px;
+    }
+    .hier-list { list-style: none; display: grid; gap: 8px; }
+    .hier-item {
+      display: flex; gap: 10px; align-items: flex-start;
+      font-size: 13px; color: var(--texto); line-height: 1.55;
+    }
+    .hier-n {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--azul); color: var(--branco);
+      font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .dir-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .dir-table td { padding: 9px 12px; border-top: 1px solid var(--cinza-2); vertical-align: top; line-height: 1.55; }
+    .dir-table td:first-child { font-weight: 600; color: var(--azul); white-space: nowrap; width: 110px; }
+    .dir-table tr:first-child td { border-top: none; }
+    .format-chips { display: flex; flex-direction: column; gap: 8px; }
+    .format-chip {
+      background: var(--cinza-1); border: 1px solid var(--cinza-2);
+      border-radius: 8px; padding: 10px 14px;
+      font-size: 12px; color: var(--texto); line-height: 1.5;
+    }
+    .format-chip strong { color: var(--azul); display: block; margin-bottom: 2px; }
+    .format-chip .fsize {
+      display: inline-block; background: var(--azul);
+      color: var(--branco); font-size: 10px; font-weight: 700;
+      padding: 2px 8px; border-radius: 4px; margin-bottom: 4px;
+    }
+    .copy-row {
+      display: flex; gap: 8px; align-items: center;
+      background: #eef2ff; border: 1px solid #c7d2f8;
+      border-radius: 8px; padding: 12px 14px; margin-bottom: 10px;
+    }
+    .copy-row-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--anil); width: 80px; flex-shrink: 0; }
+    .copy-row-text { font-size: 13px; color: var(--azul); font-weight: 600; flex: 1; }
+    .copy-row.body-row { background: var(--cinza-1); border-color: var(--cinza-2); }
+    .copy-row.body-row .copy-row-label { color: var(--cinza-4); }
+    .copy-row.body-row .copy-row-text { font-weight: 400; color: var(--texto); }
+    .cta-pill {
+      display: inline-block; background: var(--anil); color: var(--branco);
+      font-size: 12px; font-weight: 700; padding: 5px 14px;
+      border-radius: 20px; margin-top: 4px;
+    }
+    .versao-badge {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      letter-spacing: .07em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 20px; margin-bottom: 10px;
+    }
+    .versao-a { background: #eef2ff; color: var(--anil); }
+    .versao-b { background: #f0fdf4; color: #16a34a; }
+
+    /* ── FORMAT GUIDE ────────────────────────────────────────────────── */
+    .format-guide-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+    .format-guide-card {
+      background: var(--branco); border: 1px solid var(--cinza-2);
+      border-radius: var(--radius); padding: 18px;
+    }
+    .format-guide-card .plat {
+      font-size: 11px; font-weight: 700; letter-spacing: .07em;
+      text-transform: uppercase; margin-bottom: 6px;
+    }
+    .format-guide-card .plat.li { color: #0a66c2; }
+    .format-guide-card .plat.meta { color: #1877f2; }
+    .format-guide-card .plat.all { color: var(--anil); }
+    .format-guide-card .fsize-big { font-size: 16px; font-weight: 800; color: var(--azul); margin-bottom: 4px; }
+    .format-guide-card .fnote { font-size: 12px; color: var(--cinza-4); line-height: 1.5; }
+
+    /* ── LP SECTION ──────────────────────────────────────────────────── */
+    .lp-frame-wrap {
+      background: var(--branco);
+      border: 1px solid var(--cinza-2);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .lp-frame-bar {
+      background: var(--azul);
+      padding: 10px 16px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .lp-frame-dots { display: flex; gap: 6px; }
+    .lp-frame-dots span { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.2); }
+    .lp-url { font-size: 12px; color: var(--cinza-3); font-family: monospace; }
+    .lp-open-btn {
+      background: var(--verde); color: var(--azul);
+      font-size: 11px; font-weight: 700; padding: 5px 12px;
+      border-radius: 6px; text-decoration: none; white-space: nowrap;
+    }
+    .lp-iframe { width: 100%; height: 700px; border: none; display: block; }
+    .lp-fallback {
+      display: none; padding: 48px 32px; text-align: center;
+      font-size: 14px; color: var(--cinza-4);
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .ad-card-head { flex-direction: column; align-items: flex-start; }
+      .cro-item { grid-template-columns: 1fr; }
+      .cro-num { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ──────────────────────────────────────────────────────────── -->
+<header class="header">
+  <div class="header-inner">
+    <div class="badge-interno">Uso Interno · Marketing</div>
+    <h1>Campanha <span>Diagnóstico de Maturidade de RH</span></h1>
+    <p>Repositório centralizado com estratégia de mídia, copies de anúncios e análise de CRO da landing page.</p>
+    <div class="header-meta">
+      <span>📅 <strong>Criado em</strong> 17 abr 2026</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── NAV ─────────────────────────────────────────────────────────────── -->
+<nav class="nav-wrap">
+  <div class="nav">
+    <a href="#estrategia"><span class="nav-icon">📊</span>Estratégia de Mídia</a>
+    <a href="#anuncios"><span class="nav-icon">✍️</span>Anúncios</a>
+    <a href="#cro"><span class="nav-icon">🔍</span>CRO &amp; LP</a>
+    <a href="#checklist"><span class="nav-icon">✅</span>Checklist</a>
+    <a href="#criacao"><span class="nav-icon">🎨</span>Briefing de Criação</a>
+    <a href="#lp"><span class="nav-icon">🖥️</span>Landing Page</a>
+  </div>
+</nav>
+
+<!-- ── ESTRATÉGIA ──────────────────────────────────────────────────────── -->
+<section id="estrategia">
+  <div class="container">
+    <div class="section-label">01 · Planejamento</div>
+    <h2 class="section-title">Estratégia de Mídia</h2>
+    <p class="section-desc">Visão geral, alocação de budget e estrutura de campanhas por plataforma.</p>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-label">Budget Mensal</div>
+        <div class="stat-value">R$20k</div>
+        <div class="stat-sub">LinkedIn · Meta · Google</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Meta de Leads</div>
+        <div class="stat-value">132–200</div>
+        <div class="stat-sub">por mês</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">CPL Alvo</div>
+        <div class="stat-value">R$85–120</div>
+        <div class="stat-sub">blended</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Oportunidades</div>
+        <div class="stat-value">7–25</div>
+        <div class="stat-sub">MQL→OPP 5–10%</div>
+      </div>
+    </div>
+
+    <!-- Budget -->
+    <div class="card" style="margin-bottom:24px">
+      <h3 style="font-size:15px;font-weight:700;color:var(--azul);margin-bottom:20px">Alocação de Budget</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Plataforma</th><th>Budget</th><th>%</th><th>CPL Esperado</th><th>Leads Estimados</th><th>Lógica</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>LinkedIn</strong></td><td>R$8.000</td><td>40%</td><td>R$180–250</td><td>32–44</td><td>Precisão B2B: cargo + tamanho de empresa. Lead mais qualificado.</td></tr>
+            <tr><td><strong>Meta</strong></td><td>R$7.000</td><td>35%</td><td>R$70–110</td><td>64–100</td><td>Demanda gen em escala, CPL mais baixo, volume maior.</td></tr>
+            <tr><td><strong>Google</strong></td><td>R$5.000</td><td>25%</td><td>R$90–140</td><td>36–56</td><td>Captura intenção ativa: quem já busca a solução.</td></tr>
+            <tr style="font-weight:700"><td><strong>Total</strong></td><td>R$20.000</td><td>100%</td><td>~R$85–120</td><td>~132–200</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Plataformas -->
+    <div class="card-grid card-grid-3" style="margin-bottom:24px">
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div class="platform-icon pi-li">in</div>
+          <div><div style="font-weight:700;color:var(--azul)">LinkedIn</div><div style="font-size:11px;color:var(--cinza-4)">Precision B2B</div></div>
+        </div>
+        <p style="font-size:13px;color:var(--cinza-4);line-height:1.6">Único canal com segmentação por cargo + empresa + setor simultaneamente. Lead Gen Forms nativos reduzem atrito em 2–3x.</p>
+        <div style="margin-top:14px;font-size:12px;color:var(--texto)"><strong>Targeting:</strong> Coord./Gerente/Diretor/CHRO de RH · 500+ func · Brasil</div>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div class="platform-icon pi-meta">f</div>
+          <div><div style="font-weight:700;color:var(--azul)">Meta</div><div style="font-size:11px;color:var(--cinza-4)">Demand Generation</div></div>
+        </div>
+        <p style="font-size:13px;color:var(--cinza-4);line-height:1.6">CPL mais baixo, volume maior. Trabalha demanda latente — quem sente a dor mas ainda não busca. Lookalike de leads atuais.</p>
+        <div style="margin-top:14px;font-size:12px;color:var(--texto)"><strong>Formatos:</strong> Vídeo 15–30s · Imagem estática · Carrossel</div>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div class="platform-icon pi-google">G</div>
+          <div><div style="font-weight:700;color:var(--azul)">Google</div><div style="font-size:11px;color:var(--cinza-4)">Captura de Intenção</div></div>
+        </div>
+        <p style="font-size:13px;color:var(--cinza-4);line-height:1.6">Menor volume, intenção altíssima. Captura quem já pesquisa diagnóstico RH, maturidade IA, ROI IA RH.</p>
+        <div style="margin-top:14px;font-size:12px;color:var(--texto)"><strong>Negativos:</strong> careers, emprego, vagas, curriculum, ATS</div>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="card" style="margin-bottom:24px">
+      <h3 style="font-size:15px;font-weight:700;color:var(--azul);margin-bottom:20px">Benchmarks e KPIs</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Fase</th><th>Período</th><th>LinkedIn</th><th>Meta</th><th>Google</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="phase-badge phase-1">Aprendizado</span></td><td>Sem. 1–2</td><td>CTR 0,4–0,8%</td><td>CTR 1,5–3%</td><td>CTR 3–6%</td></tr>
+            <tr><td><span class="phase-badge phase-2">Otimização</span></td><td>Sem. 3–4</td><td>CPL R$180–250</td><td>CPL R$70–110</td><td>CPL R$90–140</td></tr>
+            <tr><td><span class="phase-badge phase-3">Escala</span></td><td>Mês 2+</td><td>Alerta >R$250</td><td>Alerta >R$130</td><td>Alerta >R$160</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Sinais de alerta -->
+    <div class="card">
+      <h3 style="font-size:15px;font-weight:700;color:var(--azul);margin-bottom:16px">Sinais de Alerta</h3>
+      <ul class="sinais-list">
+        <li class="sinal"><span class="sinal-dot"></span>CPL acima de R$250 por mais de 7 dias → revisar creative e targeting</li>
+        <li class="sinal"><span class="sinal-dot"></span>CTR abaixo de 0,3% no LinkedIn → trocar ângulo de copy</li>
+        <li class="sinal"><span class="sinal-dot"></span>Taxa de preenchimento do form &lt; 40% → simplificar form ou usar Lead Gen Form nativo</li>
+        <li class="sinal"><span class="sinal-dot"></span>Frequência &gt; 7 no Meta → renovar creative urgente</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ── ANÚNCIOS ─────────────────────────────────────────────────────────── -->
+<section id="anuncios">
+  <div class="container">
+    <div class="section-label">02 · Copies</div>
+    <h2 class="section-title">Anúncios</h2>
+    <p class="section-desc">3 ângulos evergreen × 3 plataformas. Testar todos no lançamento e escalar o vencedor na semana 3.</p>
+
+    <div class="card" style="margin-bottom:32px;background:#eef2ff;border-color:#c7d2f8">
+      <div style="font-size:13px;color:var(--azul);line-height:1.6">
+        <strong>Linha defensiva para todos os anúncios:</strong><br>
+        "Conduzido por especialista em RH — não pelo time comercial. Resultado prático, independente de qualquer decisão de compra."
+      </div>
+    </div>
+
+    <!-- LINKEDIN -->
+    <div class="platform-block">
+      <div class="platform-header">
+        <div class="platform-icon pi-li">in</div>
+        <div>
+          <div class="platform-name">LinkedIn</div>
+          <div class="platform-spec">Imagem 1200×627px · Headline: 150 chars · Intro text: 600 chars · Lead Gen Form nativo</div>
+        </div>
+      </div>
+      <div class="ad-cards">
+        <!-- LI A1 -->
+        <div class="ad-card">
+          <div class="ad-card-head">
+            <div><div class="ad-angle">Ângulo 1 — "Você sabe onde está de verdade?"</div><div class="ad-angle-sub">Tensão de incerteza</div></div>
+            <button class="copy-btn" onclick="copyAd(this, 'li-a1')">Copiar texto</button>
+          </div>
+          <div class="ad-body">
+            <div class="ad-field"><div class="ad-field-label">Headline</div><div class="ad-field-content headline" id="li-a1-hl">Diagnóstico gratuito: descubra onde seu RH está na era da IA</div></div>
+            <div class="ad-field"><div class="ad-field-label">Intro text</div><div class="ad-field-content" id="li-a1-body">Seu RH adotou IA. Mas você sabe se ela está gerando resultado real — ou só automatizando tarefa?
+
+A diferença entre as duas está custando orçamento e relevância para muitas áreas de RH hoje.
+
+Em 15 minutos com um especialista da Gupy, você descobre em qual estágio de maturidade sua empresa está — e o que priorizar para que a IA do seu RH gere ROI de verdade.
+
+Baseado em dados reais de centenas de empresas brasileiras. Resultado prático, independente de qualquer decisão de compra.</div></div>
+            <div class="ad-field"><div class="ad-field-label">CTA</div><div class="ad-field-content cta-text">Agendar diagnóstico</div></div>
+          </div>
+          <textarea id="li-a1" style="display:none">HEADLINE: Diagnóstico gratuito: descubra onde seu RH está na era da IA
+
+INTRO TEXT:
+Seu RH adotou IA. Mas você sabe se ela está gerando resultado real — ou só automatizando tarefa?
+
+A diferença entre as duas está custando orçamento e relevância para muitas áreas de RH hoje.
+
+Em 15 minutos com um especialista da Gupy, você descobre em qual estágio de maturidade sua empresa está — e o que priorizar para que a IA do seu RH gere ROI de verdade.
+
+Baseado em dados reais de centenas de empresas brasileiras. Resultado prático, independente de qualquer decisão de compra.
+
+CTA: Agendar diagnóstico</textarea>
+        </div>
+        <!-- LI A2 -->
+        <div class="ad-card">
+          <div class="ad-card-head">
+            <div><div class="ad-angle">Ângulo 2 — "O CEO quer ROI"</div><div class="ad-angle-sub">Pressão externa</div></div>
+            <button class="copy-btn" onclick="copyAd(this, 'li-a2')">Copiar texto</button>
+          </div>
+          <div class="ad-body">
+            <div class="ad-field"><div class="ad-field-label">Headline</div><div class="ad-field-content headline" id="li-a2-hl">O CEO quer saber o ROI do RH. Você tem a resposta?</div></div>
+            <div class="ad-field"><div class="ad-field-label">Intro text</div><div class="ad-field-content" id="li-a2-body">O CEO quer eficiência. O board quer ROI. E o RH está no meio disso tudo com ferramentas de IA que ninguém sabe ao certo se estão entregando resultado.
+
+A pressão por protagonismo nunca foi tão alta — e a falta de clareza sobre onde a área está nessa jornada é o maior risco.
+
+Diagnóstico gratuito de maturidade de RH na IA: 15 minutos com um especialista que entende de gestão de pessoas, não de vendas. Você sai com um mapa claro do seu estágio e dos próximos passos.</div></div>
+            <div class="ad-field"><div class="ad-field-label">CTA</div><div class="ad-field-content cta-text">Quero meu diagnóstico</div></div>
+          </div>
+          <textarea id="li-a2" style="display:none">HEADLINE: O CEO quer saber o ROI do RH. Você tem a resposta?
+
+INTRO TEXT:
+O CEO quer eficiência. O board quer ROI. E o RH está no meio disso tudo com ferramentas de IA que ninguém sabe ao certo se estão entregando resultado.
+
+A pressão por protagonismo nunca foi tão alta — e a falta de clareza sobre onde a área está nessa jornada é o maior risco.
+
+Diagnóstico gratuito de maturidade de RH na IA: 15 minutos com um especialista que entende de gestão de pessoas, não de vendas. Você sai com um mapa claro do seu estágio e dos próximos passos.
+
+CTA: Quero meu diagnóstico</textarea>
+        </div>
+        <!-- LI A3 -->
+        <div class="ad-card">
+          <div class="ad-card-head">
+            <div><div class="ad-angle">Ângulo 3 — "Custo da inação"</div><div class="ad-angle-sub">Stakes — o que custa não agir</div></div>
+            <button class="copy-btn" onclick="copyAd(this, 'li-a3')">Copiar texto</button>
+          </div>
+          <div class="ad-body">
+            <div class="ad-field"><div class="ad-field-label">Headline</div><div class="ad-field-content headline">Cada mês sem clareza sobre IA é um mês cedendo terreno</div></div>
+            <div class="ad-field"><div class="ad-field-label">Intro text</div><div class="ad-field-content">Cada trimestre sem clareza sobre IA no RH é um trimestre cedendo terreno — para concorrentes, para o CEO, para a irrelevância da área.
+
+Não falta inspiração. Falta um mapa real de onde sua empresa está e o que priorizar.
+
+Em 15 minutos, um especialista da Gupy faz esse diagnóstico com você — baseado em dados reais do mercado brasileiro, não em teoria de relatório global. Resultado prático, sem pitch de vendas.</div></div>
+            <div class="ad-field"><div class="ad-field-label">CTA</div><div class="ad-field-content cta-text">Agendar diagnóstico gratuito</div></div>
+          </div>
+          <textarea id="li-a3" style="display:none">HEADLINE: Cada mês sem clareza sobre IA é um mês cedendo terreno
+
+INTRO TEXT:
+Cada trimestre sem clareza sobre IA no RH é um trimestre cedendo terreno — para concorrentes, para o CEO, para a irrelevância da área.
+
+Não falta inspiração. Falta um mapa real de onde sua empresa está e o que priorizar.
+
+Em 15 minutos, um especialista da Gupy faz esse diagnóstico com você — baseado em dados reais do mercado brasileiro, não em teoria de relatório global. Resultado prático, sem pitch de vendas.
+
+CTA: Agendar diagnóstico gratuito</textarea>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- META -->
+    <div class="platform-block">
+      <div class="platform-header">
+        <div class="platform-icon pi-meta">f</div>
+        <div>
+          <div class="platform-name">Meta (Facebook + Instagram)</div>
+          <div class="platform-spec">Feed: 1080×1080px · Primary text: 125 chars visíveis · Headline: 40 chars · Stories/Reels: 1080×1920px</div>
+        </div>
+      </div>
+      <div class="ad-cards">
+        <!-- META A1 -->
+        <div class="ad-card">
+          <div class="ad-card-head">
+            <div><div class="ad-angle">Ângulo 1 — "Você sabe onde está de verdade?"</div><div class="ad-angle-sub">Tensão de incerteza</div></div>
+            <button class="copy-btn" onclick="copyAd(this, 'meta-a1')">Copiar texto</button>
+          </div>
+          <div class="ad-body">
+            <div class="ad-field"><div class="ad-field-label">Headline (40 chars)</div><div class="ad-field-content headline">Seu RH tem IA. Mas tem resultado?</div></div>
+            <div class="ad-field"><div class="ad-field-label">Primary text</div><div class="ad-field-content">Seu RH tem IA. Mas você sabe se ela está gerando resultado — ou só automatizando tarefa?
+
+A maioria das empresas está pagando pela segunda opção sem saber.
+
+Em 15 minutos com um especialista da Gupy, você descobre em qual estágio está e o que precisa mudar. Gratuito. Sem pitch de vendas.</div></div>
+            <div class="ad-field"><div class="ad-field-label">Description (30 chars)</div><div class="ad-field-content">Diagnóstico gratuito · 15 min</div></div>
+            <div class="ad-field"><div class="ad-field-label">CTA</div><div class="ad-field-content cta-text">Saiba mais</div></div>
+          </div>
+          <textarea id="meta-a1" style="display:none">HEADLINE: Seu RH tem IA. Mas tem resultado?
+
+PRIMARY TEXT:
+Seu RH tem IA. Mas você sabe se ela está gerando resultado — ou só automatizando tarefa?
+
+A maioria das empresas está pagando pela segunda opção sem saber.
+
+Em 15 minutos com um especialista da Gupy, você descobre em qual estágio está e o que precisa mudar. Gratuito. Sem pitch de vendas.
+
+DESCRIPTION: Diagnóstico gratuito · 15 min
+CTA: Saiba mais</textarea>
+        </div>
+        <!-- META A2 -->
+        <div class="ad-card">
+          <div class="ad-card-head">
+            <div><div class="ad-angle">Ângulo 2 — "O CEO quer ROI"</div><div class="ad-angle-sub">Pressão externa</div></div>
+            <button class="copy-btn" onclick="copyAd(this, 'meta-a2')">Copiar texto</button>
+          </div>
+          <div class="ad-body">
+            <div class="ad-field"><div class="ad-field-label">Headline (40 chars)</div><div class="ad-field-content headline">O CEO quer ROI. Você tem a resposta?</div></div>
+            <div class="ad-field"><div class="ad-field-label">Primary text</div><div class="ad-field-content">O CEO quer ROI do RH. E você está pagando por IA que automatiza tarefa, não por IA que gera resultado.
+
+Diagnóstico gratuito de 15 min com especialista em RH — você sai sabendo onde está e o que fazer a seguir. Independente de qualquer decisão de compra.</div></div>
+            <div class="ad-field"><div class="ad-field-label">Description (30 chars)</div><div class="ad-field-content">15 min · Especialista em RH · Grátis</div></div>
+            <div class="ad-field"><div class="ad-field-label">CTA</div><div class="ad-field-content cta-text">Agendar agora</div></div>
+          </div>
+          <textarea id="meta-a2" style="display:none">HEADLINE: O CEO quer ROI. Você tem a resposta?
+
+PRIMARY TEXT:
+O CEO quer ROI do RH. E você está pagando por IA que automatiza tarefa, não por IA que gera resultado.
+
+Diagnóstico gratuito de 15 min com especialista em RH — você sai sabendo onde está e o que fazer a seguir. Independente de qualquer decisão de compra.
+
+DESCRIPTION: 15 min · Especialista em RH · Grátis
+CTA: Agendar agora</textarea>
+        </div>
+        <!-- META A3 -->
+        <div class="ad-card">
+          <div class="ad-card-head">
+            <div><div class="ad-angle">Ângulo 3 — "Custo da inação"</div><div class="ad-angle-sub">Stakes — o que custa não agir</div></div>
+            <button class="copy-btn" onclick="copyAd(this, 'meta-a3')">Copiar texto</button>
+          </div>
+          <div class="ad-body">
+            <div class="ad-field"><div class="ad-field-label">Headline (40 chars)</div><div class="ad-field-content headline">Cada mês sem clareza custa caro</div></div>
+            <div class="ad-field"><div class="ad-field-label">Primary text</div><div class="ad-field-content">Líderes de RH que não sabem onde estão nessa jornada perdem orçamento, relevância e protagonismo.
+
+Não é falta de IA. É falta de clareza sobre o que a IA está gerando.
+
+15 minutos com um especialista da Gupy mudam isso.</div></div>
+            <div class="ad-field"><div class="ad-field-label">Description (30 chars)</div><div class="ad-field-content">Diagnóstico gratuito · Sem pitch</div></div>
+            <div class="ad-field"><div class="ad-field-label">CTA</div><div class="ad-field-content cta-text">Saiba mais</div></div>
+          </div>
+          <textarea id="meta-a3" style="display:none">HEADLINE: Cada mês sem clareza custa caro
+
+PRIMARY TEXT:
+Líderes de RH que não sabem onde estão nessa jornada perdem orçamento, relevância e protagonismo.
+
+Não é falta de IA. É falta de clareza sobre o que a IA está gerando.
+
+15 minutos com um especialista da Gupy mudam isso.
+
+DESCRIPTION: Diagnóstico gratuito · Sem pitch
+CTA: Saiba mais</textarea>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- GOOGLE -->
+    <div class="platform-block">
+      <div class="platform-header">
+        <div class="platform-icon pi-google">G</div>
+        <div>
+          <div class="platform-name">Google Search (RSA)</div>
+          <div class="platform-spec">15 headlines (máx. 30 chars) · 4 descriptions (máx. 90 chars) · Google combina automaticamente</div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+          <h4 style="font-size:13px;font-weight:700;color:var(--azul)">Headlines</h4>
+          <button class="copy-btn" onclick="copyAd(this,'google-hl')">Copiar todas as headlines</button>
+        </div>
+        <div class="headlines-grid">
+          <div class="headline-chip"><span class="headline-num">01</span>Diagnóstico RH na IA · Grátis</div>
+          <div class="headline-chip"><span class="headline-num">02</span>Seu RH gera ROI com IA?</div>
+          <div class="headline-chip"><span class="headline-num">03</span>15 min com especialista em RH</div>
+          <div class="headline-chip"><span class="headline-num">04</span>Maturidade de RH na era da IA</div>
+          <div class="headline-chip"><span class="headline-num">05</span>Sem pitch. Resultado prático.</div>
+          <div class="headline-chip"><span class="headline-num">06</span>IA no RH que gera resultado</div>
+          <div class="headline-chip"><span class="headline-num">07</span>Onde seu RH está na IA?</div>
+          <div class="headline-chip"><span class="headline-num">08</span>Especialista Gupy · Gratuito</div>
+          <div class="headline-chip"><span class="headline-num">09</span>Avaliação de Maturidade de RH</div>
+          <div class="headline-chip"><span class="headline-num">10</span>O CEO quer ROI do RH?</div>
+          <div class="headline-chip"><span class="headline-num">11</span>Saia sabendo o que priorizar</div>
+          <div class="headline-chip"><span class="headline-num">12</span>Baseado em dados reais do BR</div>
+          <div class="headline-chip"><span class="headline-num">13</span>15 minutos. Mapa prático.</div>
+          <div class="headline-chip"><span class="headline-num">14</span>Você sabe seu estágio na IA?</div>
+          <div class="headline-chip"><span class="headline-num">15</span>Diagnóstico gratuito · 15 min</div>
+        </div>
+        <textarea id="google-hl" style="display:none">01 - Diagnóstico RH na IA · Grátis
+02 - Seu RH gera ROI com IA?
+03 - 15 min com especialista em RH
+04 - Maturidade de RH na era da IA
+05 - Sem pitch. Resultado prático.
+06 - IA no RH que gera resultado
+07 - Onde seu RH está na IA?
+08 - Especialista Gupy · Gratuito
+09 - Avaliação de Maturidade de RH
+10 - O CEO quer ROI do RH?
+11 - Saia sabendo o que priorizar
+12 - Baseado em dados reais do BR
+13 - 15 minutos. Mapa prático.
+14 - Você sabe seu estágio na IA?
+15 - Diagnóstico gratuito · 15 min</textarea>
+
+        <hr class="divider" style="margin:24px 0" />
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+          <h4 style="font-size:13px;font-weight:700;color:var(--azul)">Descriptions</h4>
+          <button class="copy-btn" onclick="copyAd(this,'google-desc')">Copiar todas as descriptions</button>
+        </div>
+        <div class="ad-cards">
+          <div class="ad-field"><div class="ad-field-label">Description 1</div><div class="ad-field-content">Seu RH paga por IA que automatiza. Descubra se está gerando resultado real.</div></div>
+          <div class="ad-field"><div class="ad-field-label">Description 2</div><div class="ad-field-content">Em 15 min, um especialista da Gupy mapeia seu estágio de maturidade. Sem pitch de vendas.</div></div>
+          <div class="ad-field"><div class="ad-field-label">Description 3</div><div class="ad-field-content">Dados reais do mercado BR. Resultado prático, independente de qualquer compra.</div></div>
+          <div class="ad-field"><div class="ad-field-label">Description 4</div><div class="ad-field-content">Pressão do CEO por ROI? Saiba onde sua área está na era da IA e o que priorizar agora.</div></div>
+        </div>
+        <textarea id="google-desc" style="display:none">D1 - Seu RH paga por IA que automatiza. Descubra se está gerando resultado real.
+D2 - Em 15 min, um especialista da Gupy mapeia seu estágio de maturidade. Sem pitch de vendas.
+D3 - Dados reais do mercado BR. Resultado prático, independente de qualquer compra.
+D4 - Pressão do CEO por ROI? Saiba onde sua área está na era da IA e o que priorizar agora.</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CRO ──────────────────────────────────────────────────────────────── -->
+<section id="cro">
+  <div class="container">
+    <div class="section-label">03 · Landing Page</div>
+    <h2 class="section-title">CRO &amp; Análise da LP</h2>
+    <p class="section-desc">Análise de <a href="https://gupy-diagn-stico-rh-q6so.vercel.app/" target="_blank" style="color:var(--anil)">info.gupy.io/diagnostico-teste</a> — recomendações priorizadas por esforço e impacto.</p>
+
+    <div class="card" style="margin-bottom:32px;background:#fef2f2;border-color:#fecaca">
+      <h4 style="font-size:14px;font-weight:700;color:#dc2626;margin-bottom:10px">Dois problemas críticos identificados</h4>
+      <p style="font-size:13px;color:#7f1d1d;line-height:1.6">1. As objeções principais não estão respondidas em nenhum lugar da página.<br>2. Descontinuidade de tom: anúncios chegam com "brutal facts / ROI", LP responde com tom inspiracional — o lead sente que caiu numa página diferente.</p>
+    </div>
+
+    <h3 style="font-size:16px;font-weight:700;color:var(--azul);margin-bottom:20px">Quick Wins — Implementar Agora</h3>
+    <ul class="cro-list" style="margin-bottom:40px">
+      <li class="cro-item cro-high">
+        <div class="cro-num">1</div>
+        <div>
+          <h4>Adicionar objection handler próximo ao CTA</h4>
+          <p>Nenhuma linha da página diz que não é pitch de vendas. Adicionar logo acima ou abaixo do botão principal.</p>
+          <blockquote>"Esta sessão é conduzida por um especialista em RH — não pelo time comercial. O resultado é prático e útil independente de qualquer decisão de compra."</blockquote>
+        </div>
+      </li>
+      <li class="cro-item cro-high">
+        <div class="cro-num">2</div>
+        <div>
+          <h4>Microcopy no campo telefone</h4>
+          <p>O telefone é o meio de entrega do diagnóstico — mas sem explicação o lead interpreta como abordagem comercial. Adicionar abaixo do campo:</p>
+          <blockquote>"Usamos apenas para agendar sua sessão com o especialista."</blockquote>
+        </div>
+      </li>
+      <li class="cro-item cro-high">
+        <div class="cro-num">3</div>
+        <div>
+          <h4>Mover "100% Independente de qualquer decisão" para o hero</h4>
+          <p>Argumento mais forte contra a objeção principal — atualmente enterrado no meio da página. Deve estar visível sem scroll.</p>
+        </div>
+      </li>
+      <li class="cro-item cro-mid">
+        <div class="cro-num">4</div>
+        <div>
+          <h4>Novo CTA copy</h4>
+          <p>Substituir "Solicitar minha sessão de diagnóstico" — soa como pedido de favor, não como ação de valor.</p>
+          <div class="cro-options">
+            <span class="cro-option">Quero saber onde meu RH está</span>
+            <span class="cro-option">Agendar meu diagnóstico gratuito</span>
+            <span class="cro-option">Descobrir meu estágio de maturidade</span>
+          </div>
+        </div>
+      </li>
+      <li class="cro-item cro-mid">
+        <div class="cro-num">5</div>
+        <div>
+          <h4>Remover menu de navegação do header</h4>
+          <p>A LP tem header com logo + navegação completa. Toda saída é conversão perdida em páginas de lead gen. Manter apenas o logo.</p>
+        </div>
+      </li>
+    </ul>
+
+    <h3 style="font-size:16px;font-weight:700;color:var(--azul);margin-bottom:20px">Mudanças de Alto Impacto — Mês 2</h3>
+    <ul class="cro-list" style="margin-bottom:40px">
+      <li class="cro-item cro-mid">
+        <div class="cro-num">6</div>
+        <div>
+          <h4>Adicionar seção "O que você vai sair sabendo"</h4>
+          <p>A LP explica o framework mas não responde o que o lead vai ter nas mãos após os 15 minutos. Adicionar antes do formulário:</p>
+          <blockquote>Em qual dos 4 estágios sua empresa está hoje · O que está travando a evolução para o próximo nível · As 2–3 prioridades práticas para avançar agora · Se sua empresa está acima ou abaixo da média do mercado brasileiro</blockquote>
+        </div>
+      </li>
+      <li class="cro-item cro-mid">
+        <div class="cro-num">7</div>
+        <div>
+          <h4>Alinhar hero com tom dos anúncios (brutal facts)</h4>
+          <p>Testar variação de headline orientada a ROI para fechar o gap de mensagem entre anúncio e LP.</p>
+          <blockquote>Opção A: "Seu RH tem IA. Mas você sabe se ela está gerando resultado?"<br>Opção B: "A transformação já está acontecendo. Onde está o seu RH?" + sub com microcopy de independência</blockquote>
+        </div>
+      </li>
+    </ul>
+
+    <h3 style="font-size:16px;font-weight:700;color:var(--azul);margin-bottom:20px">Testes A/B Sugeridos</h3>
+    <div class="table-wrap" style="margin-bottom:40px">
+      <table>
+        <thead><tr><th>Elemento</th><th>Variante A (atual)</th><th>Variante B (testar)</th><th>Hipótese</th></tr></thead>
+        <tbody>
+          <tr><td>Hero headline</td><td>"A transformação já está acontecendo..."</td><td>"Seu RH tem IA. Mas você sabe se ela está gerando resultado?"</td><td>Alinhamento com tom dos anúncios aumenta conversão</td></tr>
+          <tr><td>Objection handler</td><td>Ausente</td><td>Presente acima do CTA</td><td>Reduz desconfiança e aumenta cliques no form</td></tr>
+          <tr><td>Posição do form</td><td>Final da página</td><td>Repetido em 2 pontos (meio + final)</td><td>Leads prontos não precisam rolar até o fim</td></tr>
+          <tr><td>CTA copy</td><td>"Solicitar minha sessão"</td><td>"Quero saber onde meu RH está"</td><td>Orientação a outcome aumenta CTR</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size:16px;font-weight:700;color:var(--azul);margin-bottom:16px">O Que Está Funcionando — Manter</h3>
+    <div class="keep-list">
+      <div class="keep-item"><strong>Framework de 4 níveis:</strong> ativo de credibilidade forte — gera curiosidade e faz o lead querer saber em qual nível está</div>
+      <div class="keep-item"><strong>Processo em 3 etapas</strong> (formulário → sessão → diagnóstico): reduz ansiedade sobre "o que vai acontecer"</div>
+      <div class="keep-item"><strong>Dados de pesquisa</strong> (Gallup, WEF, PwC): validam o problema sem depender de prova social da Gupy</div>
+      <div class="keep-item"><strong>"100% Independente de qualquer decisão":</strong> mensagem certa — só precisa estar mais visível</div>
+      <div class="keep-item"><strong>Sub-headline</strong> "CEOs já perguntam ao RH: onde estamos nessa transformação": alinhado com Ângulo 2 da campanha</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CHECKLIST ────────────────────────────────────────────────────────── -->
+<section id="checklist">
+  <div class="container">
+    <div class="section-label">04 · Lançamento</div>
+    <h2 class="section-title">Checklist de Lançamento</h2>
+    <p class="section-desc">Itens a concluir antes de subir os anúncios.</p>
+
+    <div class="card-grid card-grid-2">
+      <div class="card">
+        <div class="checklist-group">
+          <h4>Time Técnico</h4>
+          <div class="check-items">
+            <div class="check-item"><div class="check-box"></div>GTM disparando evento de conversão na confirmação de agendamento</div>
+            <div class="check-item"><div class="check-box"></div>LinkedIn Insight Tag instalada na LP</div>
+            <div class="check-item"><div class="check-box"></div>Meta Pixel com evento "Lead" na confirmação</div>
+            <div class="check-item"><div class="check-box"></div>UTMs configurados em todos os anúncios</div>
+            <div class="check-item"><div class="check-box"></div>Upload de lista de clientes atuais (exclusão LinkedIn + Meta)</div>
+            <div class="check-item"><div class="check-box"></div>Custom Audience de visitantes da LP criada</div>
+            <div class="check-item"><div class="check-box"></div>Lookalike 1–3% criado no Meta</div>
+            <div class="check-item"><div class="check-box"></div>LP testada em mobile (&lt;3 seg)</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="checklist-group">
+          <h4>Marketing / Design</h4>
+          <div class="check-items">
+            <div class="check-item"><div class="check-box"></div>3 variações de imagem (uma por ângulo) para LinkedIn e Meta</div>
+            <div class="check-item"><div class="check-box"></div>Vídeo 15–30 seg com legenda para Meta/Reels</div>
+            <div class="check-item"><div class="check-box"></div>Objection handler adicionado à LP</div>
+            <div class="check-item"><div class="check-box"></div>Microcopy do telefone adicionado à LP</div>
+            <div class="check-item"><div class="check-box"></div>CTA da LP atualizado</div>
+            <div class="check-item"><div class="check-box"></div>Navegação do header removida da LP</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CRIAÇÃO ──────────────────────────────────────────────────────────── -->
+<section id="criacao">
+  <div class="container">
+    <div class="section-label">05 · Time de Criação</div>
+    <h2 class="section-title">Briefing de Criação</h2>
+    <p class="section-desc">3 peças com conceito, copy, hierarquia visual e direção para o designer executar no Figma com os assets da Gupy.</p>
+
+    <div class="card" style="margin-bottom:32px;background:#00122f;border-color:#003cfd">
+      <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
+        <div style="flex:1;min-width:200px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#cdff82;margin-bottom:8px">Tom da Campanha</div>
+          <div style="font-size:14px;color:#ffffff;font-weight:600;line-height:1.5">Brutal Facts · ROI-first · Provocador</div>
+          <div style="font-size:13px;color:#c2cde6;margin-top:4px">Concorrentes prometem features. A Gupy entrega resultado.</div>
+        </div>
+        <div style="flex:1;min-width:200px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#cdff82;margin-bottom:8px">Paleta</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <div style="text-align:center"><div style="width:36px;height:36px;border-radius:6px;background:#00122f;border:1px solid rgba(255,255,255,.2)"></div><div style="font-size:10px;color:#c2cde6;margin-top:4px">#00122f</div></div>
+            <div style="text-align:center"><div style="width:36px;height:36px;border-radius:6px;background:#003cfd"></div><div style="font-size:10px;color:#c2cde6;margin-top:4px">#003cfd</div></div>
+            <div style="text-align:center"><div style="width:36px;height:36px;border-radius:6px;background:#cdff82"></div><div style="font-size:10px;color:#c2cde6;margin-top:4px">#cdff82</div></div>
+            <div style="text-align:center"><div style="width:36px;height:36px;border-radius:6px;background:#ffffff;border:1px solid rgba(255,255,255,.2)"></div><div style="font-size:10px;color:#c2cde6;margin-top:4px">#ffffff</div></div>
+          </div>
+        </div>
+        <div style="flex:1;min-width:200px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#cdff82;margin-bottom:8px">Tipografia</div>
+          <div style="font-size:14px;color:#ffffff;font-weight:600">Sans-serif bold pesado</div>
+          <div style="font-size:13px;color:#c2cde6;margin-top:4px">Tipografia Gupy oficial · Inter · Gilroy<br>Nunca texto decorativo</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCORDION -->
+    <div class="accordion">
+
+      <!-- PEÇA 1 -->
+      <div class="acc-item">
+        <button class="acc-trigger" onclick="toggleAcc(this)">
+          <div class="acc-trigger-left">
+            <div class="acc-num">1</div>
+            <div>
+              <div class="acc-title">Peça 1 — "Seu RH tem IA. Mas tem resultado?"</div>
+              <div class="acc-sub">Ângulo: Tensão de incerteza · 5 formatos</div>
+            </div>
+          </div>
+          <div class="acc-icon">+</div>
+        </button>
+        <div class="acc-body">
+          <div class="conceito-box">
+            <strong>Conceito:</strong> O líder de RH está cercado de ferramentas, dashboards e dados — mas nenhum deles responde a pergunta que o CEO faz toda semana. A peça traduz visualmente essa contradição: muito input, zero clareza. O headline corta como uma pergunta direta que o lead não consegue ignorar.
+          </div>
+
+          <div class="brief-grid">
+            <!-- Copy -->
+            <div>
+              <div class="brief-block">
+                <div class="brief-block-title">Copy na Peça</div>
+                <div class="copy-row">
+                  <div class="copy-row-label">Headline</div>
+                  <div class="copy-row-text">Seu RH tem IA. Mas tem resultado?</div>
+                </div>
+                <div class="copy-row body-row">
+                  <div class="copy-row-label">Subtexto</div>
+                  <div class="copy-row-text">Descubra em 15 min onde sua empresa está de verdade.</div>
+                </div>
+                <div class="copy-row body-row">
+                  <div class="copy-row-label">CTA</div>
+                  <div class="copy-row-text"><span class="cta-pill">Diagnóstico gratuito</span></div>
+                </div>
+                <div class="copy-row body-row">
+                  <div class="copy-row-label">Rodapé</div>
+                  <div class="copy-row-text">Gupy | gupy.io/diagnostico</div>
+                </div>
+              </div>
+
+              <div class="brief-block">
+                <div class="brief-block-title">Hierarquia Visual</div>
+                <ul class="hier-list">
+                  <li class="hier-item"><span class="hier-n">1</span>Headline — ~40% da área, bold, branco/creme sobre fundo escuro. Maior elemento visual.</li>
+                  <li class="hier-item"><span class="hier-n">2</span>Imagem — executivo de RH sozinho, telas com dados fragmentados ao fundo. Expressão pensativa.</li>
+                  <li class="hier-item"><span class="hier-n">3</span>Subtexto — fonte regular, menor, logo abaixo do headline.</li>
+                  <li class="hier-item"><span class="hier-n">4</span>CTA — pill/badge em azul Gupy ou branco com borda.</li>
+                  <li class="hier-item"><span class="hier-n">5</span>Logo Gupy — canto inferior direito, discreta.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Direção + Formatos -->
+            <div>
+              <div class="brief-block">
+                <div class="brief-block-title">Direção Visual</div>
+                <table class="dir-table">
+                  <tr><td>Paleta</td><td>Fundo azul-marinho profundo ou preto + headline branco + acento azul Gupy</td></tr>
+                  <tr><td>Mood</td><td>Dramático, cinematográfico, profissional — não genérico de stock photo</td></tr>
+                  <tr><td>Foto</td><td>Executivo 40+ sozinho em sala corporativa à noite. Múltiplas telas, gráficos fragmentados. Iluminação: contraluz azul + ponto âmbar.</td></tr>
+                  <tr><td>Tipografia</td><td>Sans-serif bold pesado. Subtexto em regular. Sem texto decorativo.</td></tr>
+                  <tr><td>Composição</td><td>Headline à esquerda ou centralizado no terço superior. Imagem 60–70% do espaço. Respiração generosa.</td></tr>
+                  <tr><td>Assets Gupy</td><td>Paleta e logo oficial. Elemento gráfico HR4Results sutil se disponível.</td></tr>
+                </table>
+              </div>
+
+              <div class="brief-block">
+                <div class="brief-block-title">Formatos a Produzir</div>
+                <div class="format-chips">
+                  <div class="format-chip"><span class="fsize">LinkedIn · 1200×627px</span><strong>Feed retangular</strong>Headline e imagem lado a lado, ou headline centralizado sobre imagem.</div>
+                  <div class="format-chip"><span class="fsize">LinkedIn · 1200×1200px</span><strong>Feed quadrado</strong>Imagem centralizada, headline no terço superior.</div>
+                  <div class="format-chip"><span class="fsize">Meta · 1080×1080px</span><strong>Feed quadrado</strong>Headline no topo, imagem abaixo. Alto contraste.</div>
+                  <div class="format-chip"><span class="fsize">Meta · 1080×1350px</span><strong>Feed retrato 4:5</strong>Mais espaço vertical — headline maior, mais respiração.</div>
+                  <div class="format-chip"><span class="fsize">Meta · 1080×1920px</span><strong>Stories / Reels</strong>Headline terço superior · imagem centro · CTA terço inferior.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PEÇA 2 -->
+      <div class="acc-item">
+        <button class="acc-trigger" onclick="toggleAcc(this)">
+          <div class="acc-trigger-left">
+            <div class="acc-num">2</div>
+            <div>
+              <div class="acc-title">Peça 2 — "O CEO quer ROI. Você tem a resposta?"</div>
+              <div class="acc-sub">Ângulo: Pressão externa · 5 formatos</div>
+            </div>
+          </div>
+          <div class="acc-icon">+</div>
+        </button>
+        <div class="acc-body">
+          <div class="conceito-box">
+            <strong>Conceito:</strong> A tensão não é interna — ela vem de cima. O CEO está na sala, olhando para números de RH que não traduzem resultado claro. A peça captura esse momento de cobrança: o RH na berlinda, sem a resposta que o negócio precisa. O headline é uma pergunta que o lead já ouviu — ou vai ouvir em breve.
+          </div>
+
+          <div class="brief-grid">
+            <div>
+              <div class="brief-block">
+                <div class="brief-block-title">Copy na Peça</div>
+                <div class="copy-row">
+                  <div class="copy-row-label">Headline</div>
+                  <div class="copy-row-text">O CEO quer ROI do RH. Você tem a resposta?</div>
+                </div>
+                <div class="copy-row body-row">
+                  <div class="copy-row-label">Subtexto</div>
+                  <div class="copy-row-text">15 min com um especialista para saber onde você está.</div>
+                </div>
+                <div class="copy-row body-row">
+                  <div class="copy-row-label">CTA</div>
+                  <div class="copy-row-text"><span class="cta-pill">Fazer o diagnóstico</span></div>
+                </div>
+                <div class="copy-row body-row">
+                  <div class="copy-row-label">Rodapé</div>
+                  <div class="copy-row-text">Gupy | gupy.io/diagnostico</div>
+                </div>
+              </div>
+
+              <div class="brief-block">
+                <div class="brief-block-title">Hierarquia Visual</div>
+                <ul class="hier-list">
+                  <li class="hier-item"><span class="hier-n">1</span>Headline — dominante, tom de pergunta direta. Não suavizar.</li>
+                  <li class="hier-item"><span class="hier-n">2</span>Imagem — boardroom: executiva de RH apresentando para CEO cético. Dados ambíguos na tela atrás.</li>
+                  <li class="hier-item"><span class="hier-n">3</span>Subtexto — complementa o headline, entrega o benefício.</li>
+                  <li class="hier-item"><span class="hier-n">4</span>CTA — destacado, convidativo mas não agressivo.</li>
+                  <li class="hier-item"><span class="hier-n">5</span>Logo Gupy — discreta.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div>
+              <div class="brief-block">
+                <div class="brief-block-title">Direção Visual</div>
+                <table class="dir-table">
+                  <tr><td>Paleta</td><td>Tons frios e dessaturados — cinza escuro, branco, azul Gupy como acento. Clima de sala de reunião real.</td></tr>
+                  <tr><td>Mood</td><td>Tenso, profissional, high-stakes. Cinematográfico. Iluminação lateral dramática com sombras profundas.</td></tr>
+                  <tr><td>Foto</td><td>Boardroom moderno. Executiva de RH (35–45 anos) de frente para CEO/comitê. Tela com métricas ambíguas atrás. Expressão do CEO: expectante, questionador.</td></tr>
+                  <tr><td>Tipografia</td><td>Headline bold, branco ou creme. Pode usar caixa alta no início. Subtexto em regular.</td></tr>
+                  <tr><td>Composição</td><td>Headline no terço superior. Imagem no centro. CTA e logo na base. Headline pode sobrepor a imagem se o contraste permitir.</td></tr>
+                </table>
+              </div>
+
+              <div class="brief-block">
+                <div class="brief-block-title">Formatos a Produzir</div>
+                <div class="format-chips">
+                  <div class="format-chip"><span class="fsize">LinkedIn · 1200×627px</span><strong>Feed retangular</strong>Boardroom ao fundo, headline com overlay escuro sutil.</div>
+                  <div class="format-chip"><span class="fsize">LinkedIn · 1200×1200px</span><strong>Feed quadrado</strong>Crop na executiva e CEO, headline centralizado no topo.</div>
+                  <div class="format-chip"><span class="fsize">Meta · 1080×1080px</span><strong>Feed quadrado</strong>Foco no rosto da executiva sob pressão, headline grande no topo.</div>
+                  <div class="format-chip"><span class="fsize">Meta · 1080×1350px</span><strong>Feed retrato 4:5</strong>Mais contexto da sala, headline e subtexto com mais respiro.</div>
+                  <div class="format-chip"><span class="fsize">Meta · 1080×1920px</span><strong>Stories / Reels</strong>Headline terço superior · cena no meio · CTA terço inferior.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PEÇA 3 -->
+      <div class="acc-item">
+        <button class="acc-trigger" onclick="toggleAcc(this)">
+          <div class="acc-trigger-left">
+            <div class="acc-num">3</div>
+            <div>
+              <div class="acc-title">Peça 3 — "Cada mês sem clareza é um mês cedendo terreno"</div>
+              <div class="acc-sub">Ângulo: Custo da inação · 2 versões · 5 formatos</div>
+            </div>
+          </div>
+          <div class="acc-icon">+</div>
+        </button>
+        <div class="acc-body">
+          <div class="conceito-box">
+            <strong>Conceito:</strong> Não há urgência explícita — mas há consequência silenciosa. Cada mês sem saber onde o RH está na jornada de IA é um mês em que concorrentes avançam, orçamento encolhe e relevância da área diminui. A peça usa o contraste visual entre estagnação e movimento para tornar essa perda tangível. <strong>Duas versões para testar A/B</strong>: abstrata (split) e com pessoa.
+          </div>
+
+          <div class="brief-grid">
+            <div>
+              <div class="brief-block">
+                <div class="brief-block-title">Copy na Peça</div>
+                <div class="copy-row">
+                  <div class="copy-row-label">Headline</div>
+                  <div class="copy-row-text">Cada mês sem clareza é um mês cedendo terreno.</div>
+                </div>
+                <div class="copy-row body-row">
+                  <div class="copy-row-label">Subtexto</div>
+                  <div class="copy-row-text">Saiba onde seu RH está em 15 minutos.</div>
+                </div>
+                <div class="copy-row body-row">
+                  <div class="copy-row-label">CTA</div>
+                  <div class="copy-row-text"><span class="cta-pill">Diagnóstico gratuito</span></div>
+                </div>
+                <div class="copy-row body-row">
+                  <div class="copy-row-label">Rodapé</div>
+                  <div class="copy-row-text">Gupy | gupy.io/diagnostico</div>
+                </div>
+              </div>
+
+              <div class="brief-block">
+                <div class="brief-block-title">Hierarquia Visual — Versão A (Split)</div>
+                <ul class="hier-list">
+                  <li class="hier-item"><span class="hier-n">1</span>Composição dividida ao meio: esquerda escura/estática · direita iluminada/dinâmica.</li>
+                  <li class="hier-item"><span class="hier-n">2</span>Headline no centro ou terço superior, sobrepondo os dois lados.</li>
+                  <li class="hier-item"><span class="hier-n">3</span>Subtexto no lado claro — associado ao caminho correto.</li>
+                  <li class="hier-item"><span class="hier-n">4</span>CTA e logo na base.</li>
+                </ul>
+              </div>
+
+              <div class="brief-block" style="margin-top:20px">
+                <div class="brief-block-title">Hierarquia Visual — Versão B (Pessoa)</div>
+                <ul class="hier-list">
+                  <li class="hier-item"><span class="hier-n">1</span>Líder de RH caminhando em direção a porta iluminada — clareza, resultado.</li>
+                  <li class="hier-item"><span class="hier-n">2</span>Corredor escuro atrás — representa o passado sem direção.</li>
+                  <li class="hier-item"><span class="hier-n">3</span>Headline no terço superior.</li>
+                  <li class="hier-item"><span class="hier-n">4</span>CTA e logo na base.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div>
+              <div class="brief-block">
+                <div class="brief-block-title">Direção Visual</div>
+                <div style="margin-bottom:10px"><span class="versao-badge versao-a">Versão A — Split abstrato</span></div>
+                <table class="dir-table" style="margin-bottom:16px">
+                  <tr><td>Paleta</td><td>Esquerda: cinza escuro, dessaturado. Direita: azul Gupy vibrante, dados organizados, linhas clean. Headline branco cruzando os dois lados.</td></tr>
+                  <tr><td>Foto</td><td>Composição gráfica abstrata — pode ser criada 100% no Figma, sem foto. Elementos de dados (linhas, pontos, gráficos) no lado claro.</td></tr>
+                  <tr><td>Mood</td><td>Urgência silenciosa. Contraste visual entre estagnação e progresso.</td></tr>
+                </table>
+                <div style="margin-bottom:10px"><span class="versao-badge versao-b">Versão B — Com pessoa (A/B)</span></div>
+                <table class="dir-table">
+                  <tr><td>Paleta</td><td>Corredor em azul-marinho profundo. Porta iluminada em branco/azul claro. Headline branco sobre o escuro.</td></tr>
+                  <tr><td>Foto</td><td>Homem de RH (35–45 anos) de costas ou perfil, caminhando em direção à luz. Não mostrar rosto — gera identificação mais ampla.</td></tr>
+                  <tr><td>Tipografia</td><td>Headline bold, branco. Caixa alta no início para peso. Subtexto regular.</td></tr>
+                </table>
+              </div>
+
+              <div class="brief-block">
+                <div class="brief-block-title">Formatos a Produzir</div>
+                <div class="format-chips">
+                  <div class="format-chip"><span class="fsize">LinkedIn · 1200×627px</span><strong>Feed retangular</strong>Split horizontal lado a lado. Headline centralizado sobre a divisão.</div>
+                  <div class="format-chip"><span class="fsize">LinkedIn · 1200×1200px</span><strong>Feed quadrado</strong>Split vertical ou Versão B com pessoa. Headline no topo.</div>
+                  <div class="format-chip"><span class="fsize">Meta · 1080×1080px</span><strong>Feed quadrado</strong>Versão A abstrata. Alto contraste funciona bem no quadrado.</div>
+                  <div class="format-chip"><span class="fsize">Meta · 1080×1350px</span><strong>Feed retrato 4:5</strong>Versão B com pessoa — mais espaço para composição de corredor.</div>
+                  <div class="format-chip"><span class="fsize">Meta · 1080×1920px</span><strong>Stories / Reels</strong>Versão B vertical — corredor impacta muito em 9:16. Headline grande no topo.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GUIA DE FORMATOS -->
+    <div style="margin-top:48px">
+      <h3 style="font-size:16px;font-weight:700;color:var(--azul);margin-bottom:6px">Guia de Formatos — Todas as Peças</h3>
+      <p style="font-size:13px;color:var(--cinza-4);margin-bottom:24px">Total de 15 peças. Priorizar LinkedIn 1200×627 + Meta 1080×1080 para a fase de testes. Demais formatos após definir o ângulo vencedor.</p>
+      <div class="format-guide-grid">
+        <div class="format-guide-card">
+          <div class="plat li">LinkedIn</div>
+          <div class="fsize-big">1200×627px</div>
+          <div class="fnote">Feed retangular (1.91:1)<br>3 peças — uma por ângulo<br><strong>⭐ Prioridade alta</strong></div>
+        </div>
+        <div class="format-guide-card">
+          <div class="plat li">LinkedIn</div>
+          <div class="fsize-big">1200×1200px</div>
+          <div class="fnote">Feed quadrado (1:1)<br>3 peças — uma por ângulo</div>
+        </div>
+        <div class="format-guide-card">
+          <div class="plat meta">Meta</div>
+          <div class="fsize-big">1080×1080px</div>
+          <div class="fnote">Feed quadrado (1:1)<br>3 peças — uma por ângulo<br><strong>⭐ Prioridade alta</strong></div>
+        </div>
+        <div class="format-guide-card">
+          <div class="plat meta">Meta</div>
+          <div class="fsize-big">1080×1350px</div>
+          <div class="fnote">Feed retrato (4:5)<br>3 peças — uma por ângulo</div>
+        </div>
+        <div class="format-guide-card">
+          <div class="plat meta">Meta</div>
+          <div class="fsize-big">1080×1920px</div>
+          <div class="fnote">Stories / Reels (9:16)<br>3 peças — uma por ângulo</div>
+        </div>
+        <div class="format-guide-card" style="background:var(--azul);border-color:var(--anil)">
+          <div class="plat all" style="color:var(--verde)">Total</div>
+          <div class="fsize-big" style="color:var(--branco)">15 peças</div>
+          <div class="fnote" style="color:var(--cinza-3)">5 formatos × 3 ângulos<br>Começar com 6 (⭐) e escalar</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── LANDING PAGE ─────────────────────────────────────────────────────── -->
+<section id="lp">
+  <div class="container">
+    <div class="section-label">06 · Landing Page</div>
+    <h2 class="section-title">Landing Page da Campanha</h2>
+    <p class="section-desc">Visualização da LP atual em <a href="https://gupy-diagn-stico-rh-q6so.vercel.app/" target="_blank" style="color:var(--anil)">info.gupy.io/diagnostico-teste</a>. As recomendações de CRO estão na seção anterior.</p>
+    <div class="lp-frame-wrap">
+      <div class="lp-frame-bar">
+        <div class="lp-frame-dots"><span></span><span></span><span></span></div>
+        <div class="lp-url">https://gupy-diagn-stico-rh-q6so.vercel.app/</div>
+        <a href="https://gupy-diagn-stico-rh-q6so.vercel.app/" target="_blank" class="lp-open-btn">Abrir em nova aba ↗</a>
+      </div>
+      <iframe
+        class="lp-iframe"
+        src="https://gupy-diagn-stico-rh-q6so.vercel.app/"
+        title="Landing Page — Diagnóstico de Maturidade de RH"
+        loading="lazy"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='block'"
+      ></iframe>
+      <div class="lp-fallback">
+        <p style="margin-bottom:16px">A página não pode ser exibida em iframe por configuração do servidor.</p>
+        <a href="https://gupy-diagn-stico-rh-q6so.vercel.app/" target="_blank" style="display:inline-block;background:var(--anil);color:#fff;font-weight:700;font-size:14px;padding:12px 24px;border-radius:8px;text-decoration:none">Abrir Landing Page ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ───────────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <strong>Gupy</strong> · Marketing Interno · 2026 &nbsp;·&nbsp; Repositório gerado em 17 abr 2026
+</footer>
+
+<script>
+  function toggleAcc(btn) {
+    const body = btn.nextElementSibling;
+    const isOpen = btn.classList.contains('open');
+    btn.classList.toggle('open', !isOpen);
+    body.classList.toggle('open', !isOpen);
+  }
+
+  function copyAd(btn, id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    navigator.clipboard.writeText(el.value.trim()).then(() => {
+      btn.textContent = 'Copiado ✓';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copiar texto';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  // Highlight nav link on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav a');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => {
+          a.style.color = '';
+          a.style.borderBottomColor = '';
+        });
+        const active = document.querySelector(`.nav a[href="#${e.target.id}"]`);
+        if (active) {
+          active.style.color = '#ffffff';
+          active.style.borderBottomColor = '#003cfd';
+        }
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

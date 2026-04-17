@@ -1,0 +1,240 @@
+{
+  "name": "Briefing Campanha Gupy — Auto Update",
+  "nodes": [
+    {
+      "parameters": {
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "COLE_AQUI_O_ID_DA_PASTA_DO_DRIVE",
+          "mode": "id"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "id": "f1a2b3c4-d5e6-7890-abcd-ef1234567891",
+      "name": "Drive — Novo Briefing",
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "CREDENCIAL_GOOGLE_DRIVE",
+          "name": "Google Drive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "a2b3c4d5-e6f7-8901-bcde-f12345678902",
+      "name": "Drive — Baixar .docx",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [460, 300],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "CREDENCIAL_GOOGLE_DRIVE",
+          "name": "Google Drive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "id": "b3c4d5e6-f7a8-9012-cdef-123456789003",
+      "name": "Extrair texto do .docx",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "COLE_AQUI_SUA_API_KEY_CLAUDE"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 4000, system: 'Você é um assistente de marketing da Gupy. Receberá o conteúdo de um briefing de campanha revisado extraído de um documento Word. Analise o conteúdo e retorne um JSON válido com exatamente 3 chaves: campanha (conteúdo Markdown com estratégia de mídia, budget e plataformas), anuncios (conteúdo Markdown com todos os copies de anúncios para LinkedIn Meta e Google), cro (conteúdo Markdown com análise e recomendações de CRO da landing page). Retorne APENAS o JSON sem texto adicional.', messages: [{ role: 'user', content: $json.text }] }) }}",
+        "options": {}
+      },
+      "id": "c4d5e6f7-a8b9-0123-defa-234567890004",
+      "name": "Claude — Processar mudancas",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.item.json;\nconst text = body.content[0].text;\n\nlet parsed;\ntry {\n  parsed = JSON.parse(text);\n} catch(e) {\n  const match = text.match(/```(?:json)?\\n?([\\s\\S]+?)\\n?```/);\n  if (match) {\n    parsed = JSON.parse(match[1]);\n  } else {\n    throw new Error('Claude nao retornou JSON valido: ' + text.substring(0, 300));\n  }\n}\n\nreturn [{\n  json: {\n    campanha: parsed.campanha || '',\n    anuncios: parsed.anuncios || '',\n    cro: parsed.cro || ''\n  }\n}];"
+      },
+      "id": "d5e6f7a8-b9c0-1234-efab-345678900005",
+      "name": "Preparar conteudo dos md",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": "SEU_USUARIO_GITHUB",
+        "repository": "SEU_REPOSITORIO_GITHUB",
+        "filePath": ".agents/campanha-diagnostico-gupy.md",
+        "fileContent": "={{ $json.campanha }}",
+        "commitMessage": "chore: atualizar estrategia de campanha via n8n",
+        "additionalParameters": {}
+      },
+      "id": "e6f7a8b9-c0d1-2345-fabc-456789000006",
+      "name": "GitHub — campanha.md",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [1340, 300],
+      "credentials": {
+        "githubApi": {
+          "id": "CREDENCIAL_GITHUB",
+          "name": "GitHub"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": "SEU_USUARIO_GITHUB",
+        "repository": "SEU_REPOSITORIO_GITHUB",
+        "filePath": ".agents/anuncios-diagnostico-gupy.md",
+        "fileContent": "={{ $('Preparar conteudo dos md').item.json.anuncios }}",
+        "commitMessage": "chore: atualizar copies de anuncios via n8n",
+        "additionalParameters": {}
+      },
+      "id": "f7a8b9c0-d1e2-3456-abcd-567890000007",
+      "name": "GitHub — anuncios.md",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [1560, 300],
+      "credentials": {
+        "githubApi": {
+          "id": "CREDENCIAL_GITHUB",
+          "name": "GitHub"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": "SEU_USUARIO_GITHUB",
+        "repository": "SEU_REPOSITORIO_GITHUB",
+        "filePath": ".agents/cro-lp-diagnostico.md",
+        "fileContent": "={{ $('Preparar conteudo dos md').item.json.cro }}",
+        "commitMessage": "chore: atualizar analise de CRO via n8n",
+        "additionalParameters": {}
+      },
+      "id": "a8b9c0d1-e2f3-4567-bcde-678900000008",
+      "name": "GitHub — cro.md",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [1780, 300],
+      "credentials": {
+        "githubApi": {
+          "id": "CREDENCIAL_GITHUB",
+          "name": "GitHub"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "COLE_AQUI_O_VERCEL_DEPLOY_HOOK",
+        "options": {}
+      },
+      "id": "b9c0d1e2-f3a4-5678-cdef-789000000009",
+      "name": "Vercel — Redeploy",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [2000, 300]
+    },
+    {
+      "parameters": {
+        "sendTo": "COLE_AQUI_SEU_EMAIL",
+        "subject": "Campanha Gupy atualizada",
+        "emailType": "text",
+        "message": "O briefing revisado foi processado com sucesso.\n\nA pagina da campanha foi atualizada:\nhttps://campanha-gupy.vercel.app\n\nArquivos atualizados:\n- campanha-diagnostico-gupy.md\n- anuncios-diagnostico-gupy.md\n- cro-lp-diagnostico.md",
+        "options": {}
+      },
+      "id": "c0d1e2f3-a4b5-6789-defa-890000000010",
+      "name": "Email — Notificacao",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [2220, 300],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CREDENCIAL_GMAIL",
+          "name": "Gmail"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Drive — Novo Briefing": {
+      "main": [[{"node": "Drive — Baixar .docx", "type": "main", "index": 0}]]
+    },
+    "Drive — Baixar .docx": {
+      "main": [[{"node": "Extrair texto do .docx", "type": "main", "index": 0}]]
+    },
+    "Extrair texto do .docx": {
+      "main": [[{"node": "Claude — Processar mudancas", "type": "main", "index": 0}]]
+    },
+    "Claude — Processar mudancas": {
+      "main": [[{"node": "Preparar conteudo dos md", "type": "main", "index": 0}]]
+    },
+    "Preparar conteudo dos md": {
+      "main": [[{"node": "GitHub — campanha.md", "type": "main", "index": 0}]]
+    },
+    "GitHub — campanha.md": {
+      "main": [[{"node": "GitHub — anuncios.md", "type": "main", "index": 0}]]
+    },
+    "GitHub — anuncios.md": {
+      "main": [[{"node": "GitHub — cro.md", "type": "main", "index": 0}]]
+    },
+    "GitHub — cro.md": {
+      "main": [[{"node": "Vercel — Redeploy", "type": "main", "index": 0}]]
+    },
+    "Vercel — Redeploy": {
+      "main": [[{"node": "Email — Notificacao", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1
+}
