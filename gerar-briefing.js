@@ -161,7 +161,7 @@ const children = [
       ["Formato", "Sessão de 15 min com especialista em RH via telefone"],
       ["Objetivo", "Geração de leads qualificados → oportunidades comerciais"],
       ["Landing page", "https://info.gupy.io/diagnostico-teste"],
-      ["Budget mensal", "R$20.000"],
+      ["Budget mensal", "R$25.000"],
       ["Plataformas", "LinkedIn + Meta + Google"],
       ["Tom", "Brutal facts — ROI-first, provocador, sem promessa de feature"],
     ],
@@ -222,14 +222,14 @@ const children = [
   makeTable(
     ["Plataforma", "Budget", "%", "CPL Esperado", "Leads Estimados"],
     [
-      ["LinkedIn", "R$8.000", "40%", "R$180–250", "32–44"],
-      ["Meta", "R$7.000", "35%", "R$70–110", "64–100"],
-      ["Google", "R$5.000", "25%", "R$90–140", "36–56"],
-      ["TOTAL", "R$20.000", "100%", "~R$85–120", "~132–200"],
+      ["LinkedIn", "R$10.000", "40%", "R$180–250", "40–55"],
+      ["Meta", "R$8.750", "35%", "R$70–110", "80–125"],
+      ["Google", "R$6.250", "25%", "R$90–140", "45–70"],
+      ["TOTAL", "R$25.000", "100%", "~R$85–125", "~165–250"],
     ],
     [2200, 1600, 900, 2000, 2660]
   ),
-  p("Com 5–10% MQL→OPP (histórico): 7–20 oportunidades/mês (conservador) a 13–25 (otimista).", { italic: true, color: "666666" }),
+  p("Com 5–10% MQL→OPP (histórico): 8–17 oportunidades/mês (conservador) a 17–25 (otimista).", { italic: true, color: "666666" }),
 
   divider(),
   pageBreak(),
