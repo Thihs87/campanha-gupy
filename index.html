@@ -1561,5 +1561,229 @@ D4 - Pressão do CEO por ROI? Saiba onde sua área está na era da IA e o que pr
   }, { rootMargin: '-40% 0px -55% 0px' });
   sections.forEach(s => observer.observe(s));
 </script>
+
+<!-- ── BOTÃO FLUTUANTE UPLOAD ─────────────────────────────────────────── -->
+<button class="upload-fab" onclick="abrirUpload()" title="Atualizar briefing">
+  ↑ Atualizar Briefing
+</button>
+
+<!-- ── MODAL UPLOAD ──────────────────────────────────────────────────── -->
+<div class="upload-overlay" id="uploadOverlay" onclick="fecharUpload(event)">
+  <div class="upload-modal">
+    <button class="upload-close" onclick="fecharUpload()">✕</button>
+    <div class="upload-icon">📄</div>
+    <h2 class="upload-title">Atualizar Briefing</h2>
+    <p class="upload-desc">Suba o .docx revisado pelo time. O Claude vai processar as mudanças e publicar a página automaticamente.</p>
+
+    <div class="upload-drop" id="uploadDrop"
+         ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)"
+         onclick="document.getElementById('uploadInput').click()">
+      <div class="upload-drop-icon">📁</div>
+      <div class="upload-drop-text">Arraste o .docx aqui<br><span>ou clique para selecionar</span></div>
+      <input type="file" id="uploadInput" accept=".docx" style="display:none" onchange="selecionarArquivo(this)">
+    </div>
+
+    <div class="upload-filename" id="uploadFilename" style="display:none"></div>
+
+    <button class="upload-btn" id="uploadBtn" onclick="enviarBriefing()" disabled>
+      Processar e publicar
+    </button>
+
+    <div class="upload-status" id="uploadStatus" style="display:none"></div>
+  </div>
+</div>
+
+<style>
+  .upload-fab {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--verde);
+    color: var(--azul);
+    border: none;
+    border-radius: 50px;
+    padding: 14px 22px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,.3);
+    z-index: 200;
+    transition: transform .15s, box-shadow .15s;
+    font-family: 'Inter', sans-serif;
+  }
+  .upload-fab:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(0,0,0,.4); }
+
+  .upload-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,6,20,.7);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .upload-overlay.open { display: flex; }
+
+  .upload-modal {
+    background: #0d1b35;
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 16px;
+    padding: 40px;
+    width: 100%;
+    max-width: 480px;
+    margin: 20px;
+    position: relative;
+    text-align: center;
+  }
+  .upload-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: none; border: none;
+    color: var(--cinza-3); font-size: 18px;
+    cursor: pointer; line-height: 1;
+  }
+  .upload-close:hover { color: var(--branco); }
+  .upload-icon { font-size: 36px; margin-bottom: 12px; }
+  .upload-title { font-size: 20px; font-weight: 700; color: var(--branco); margin-bottom: 8px; }
+  .upload-desc { font-size: 13px; color: var(--cinza-3); line-height: 1.6; margin-bottom: 24px; }
+
+  .upload-drop {
+    border: 2px dashed rgba(255,255,255,.15);
+    border-radius: 12px;
+    padding: 32px 20px;
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
+    margin-bottom: 16px;
+  }
+  .upload-drop:hover, .upload-drop.over {
+    border-color: var(--verde);
+    background: rgba(205,255,130,.05);
+  }
+  .upload-drop-icon { font-size: 28px; margin-bottom: 10px; }
+  .upload-drop-text { font-size: 14px; color: var(--cinza-3); line-height: 1.6; }
+  .upload-drop-text span { font-size: 12px; color: var(--cinza-4); }
+
+  .upload-filename {
+    background: rgba(255,255,255,.06);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--verde);
+    margin-bottom: 16px;
+    text-align: left;
+  }
+
+  .upload-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--verde);
+    color: var(--azul);
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: opacity .2s;
+  }
+  .upload-btn:disabled { opacity: .35; cursor: not-allowed; }
+  .upload-btn:not(:disabled):hover { opacity: .85; }
+
+  .upload-status {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .upload-status.loading { background: rgba(0,60,253,.15); color: #7aa3ff; }
+  .upload-status.success { background: rgba(205,255,130,.1); color: var(--verde); }
+  .upload-status.error { background: rgba(255,80,80,.1); color: #ff8080; }
+</style>
+
+<script>
+  let arquivoSelecionado = null;
+
+  function abrirUpload() {
+    document.getElementById('uploadOverlay').classList.add('open');
+  }
+  function fecharUpload(e) {
+    if (e && e.target !== document.getElementById('uploadOverlay')) return;
+    document.getElementById('uploadOverlay').classList.remove('open');
+    resetUpload();
+  }
+  function resetUpload() {
+    arquivoSelecionado = null;
+    document.getElementById('uploadFilename').style.display = 'none';
+    document.getElementById('uploadBtn').disabled = true;
+    document.getElementById('uploadStatus').style.display = 'none';
+    document.getElementById('uploadInput').value = '';
+  }
+  function dragOver(e) { e.preventDefault(); e.currentTarget.classList.add('over'); }
+  function dragLeave(e) { e.currentTarget.classList.remove('over'); }
+  function dropFile(e) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('over');
+    const file = e.dataTransfer.files[0];
+    if (file) definirArquivo(file);
+  }
+  function selecionarArquivo(input) {
+    if (input.files[0]) definirArquivo(input.files[0]);
+  }
+  function definirArquivo(file) {
+    if (!file.name.endsWith('.docx')) {
+      mostrarStatus('error', 'Apenas arquivos .docx são aceitos.');
+      return;
+    }
+    arquivoSelecionado = file;
+    const fn = document.getElementById('uploadFilename');
+    fn.textContent = '📄 ' + file.name;
+    fn.style.display = 'block';
+    document.getElementById('uploadBtn').disabled = false;
+    document.getElementById('uploadStatus').style.display = 'none';
+  }
+  function mostrarStatus(tipo, msg) {
+    const el = document.getElementById('uploadStatus');
+    el.className = 'upload-status ' + tipo;
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  async function enviarBriefing() {
+    if (!arquivoSelecionado) return;
+
+    const btn = document.getElementById('uploadBtn');
+    btn.disabled = true;
+    mostrarStatus('loading', '⏳ Lendo o documento...');
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const base64 = e.target.result.split(',')[1];
+      mostrarStatus('loading', '🤖 Claude está processando as mudanças...');
+
+      try {
+        const res = await fetch('/api/processar-briefing', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ file: base64 }),
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          mostrarStatus('success', '✅ Briefing processado! A página será atualizada em 1–2 minutos.');
+          resetUpload();
+        } else {
+          mostrarStatus('error', '❌ Erro: ' + (data.error || 'Falha desconhecida'));
+          btn.disabled = false;
+        }
+      } catch (err) {
+        mostrarStatus('error', '❌ Erro de conexão. Tente novamente.');
+        btn.disabled = false;
+      }
+    };
+    reader.readAsDataURL(arquivoSelecionado);
+  }
+</script>
 </body>
 </html>
