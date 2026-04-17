@@ -76,7 +76,7 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 7000,
-        system: `Você é um assistente de marketing da Gupy. Analise o briefing e retorne um JSON com exatamente 5 chaves, todas em Markdown conciso:\n- "campanha": estratégia, budget por plataforma e metas\n- "anuncios": copies por plataforma e ângulo\n- "cro": recomendações de CRO da landing page\n- "checklist": checklist de lançamento dividido em Time Técnico e Marketing/Design\n- "criacao": briefing de criação com tom, conceito e copies para 2-3 peças por plataforma\nSeja conciso em todas as seções.`,
+        system: `Você é um assistente de marketing da Gupy. Analise o briefing e retorne um JSON com exatamente 6 chaves:\n- "campanha": string Markdown — estratégia, budget por plataforma e metas\n- "anuncios": string Markdown — copies por plataforma e ângulo\n- "cro": string Markdown — recomendações de CRO da landing page\n- "checklist": string Markdown — checklist dividido em Time Técnico e Marketing/Design\n- "criacao": string Markdown — briefing de criação com tom, conceito e copies para 2-3 peças\n- "stats": objeto JSON com 4 campos extraídos do briefing: budget (ex: "R$25k"), leads (ex: "165–250"), cpl (ex: "R$85–125"), oportunidades (ex: "8–17")\nSeja conciso. Retorne APENAS o JSON.`,
         messages: [
           { role: 'user', content: textTruncado },
           { role: 'assistant', content: '{' },
@@ -126,6 +126,7 @@ module.exports = async function handler(req, res) {
       cro:       parsed.cro       || '',
       checklist: parsed.checklist || '',
       criacao:   parsed.criacao   || '',
+      stats:     parsed.stats     || {},
     }, null, 2);
     await updateGitHubFile('data.json', dataJson);
 

@@ -714,22 +714,22 @@
     <div class="stats-row">
       <div class="stat">
         <div class="stat-label">Budget Mensal</div>
-        <div class="stat-value">R$20k</div>
+        <div class="stat-value" id="stat-budget">R$20k</div>
         <div class="stat-sub">LinkedIn · Meta · Google</div>
       </div>
       <div class="stat">
         <div class="stat-label">Meta de Leads</div>
-        <div class="stat-value">132–200</div>
+        <div class="stat-value" id="stat-leads">132–200</div>
         <div class="stat-sub">por mês</div>
       </div>
       <div class="stat">
         <div class="stat-label">CPL Alvo</div>
-        <div class="stat-value">R$85–120</div>
+        <div class="stat-value" id="stat-cpl">R$85–120</div>
         <div class="stat-sub">blended</div>
       </div>
       <div class="stat">
         <div class="stat-label">Oportunidades</div>
-        <div class="stat-value">7–25</div>
+        <div class="stat-value" id="stat-oportunidades">7–25</div>
         <div class="stat-sub">MQL→OPP 5–10%</div>
       </div>
     </div>
@@ -1653,6 +1653,14 @@ D4 - Pressão do CEO por ROI? Saiba onde sua área está na era da IA e o que pr
         el.innerHTML = renderFn(data[key]);
         el.style.display = 'block';
       });
+
+      if (data.stats) {
+        const s = typeof data.stats === 'string' ? JSON.parse(data.stats) : data.stats;
+        if (s.budget)        document.getElementById('stat-budget').textContent       = s.budget;
+        if (s.leads)         document.getElementById('stat-leads').textContent        = s.leads;
+        if (s.cpl)           document.getElementById('stat-cpl').textContent          = s.cpl;
+        if (s.oportunidades) document.getElementById('stat-oportunidades').textContent = s.oportunidades;
+      }
 
       if (data.updatedAt) {
         const d = new Date(data.updatedAt);
