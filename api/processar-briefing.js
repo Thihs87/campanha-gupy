@@ -75,8 +75,8 @@ module.exports = async function handler(req, res) {
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 5000,
-        system: `Você é um assistente de marketing da Gupy. Analise o briefing e retorne um JSON com 3 chaves: "campanha" (estratégia e budget em Markdown), "anuncios" (copies dos anúncios em Markdown), "cro" (recomendações de CRO em Markdown). Seja conciso.`,
+        max_tokens: 7000,
+        system: `Você é um assistente de marketing da Gupy. Analise o briefing e retorne um JSON com exatamente 5 chaves, todas em Markdown conciso:\n- "campanha": estratégia, budget por plataforma e metas\n- "anuncios": copies por plataforma e ângulo\n- "cro": recomendações de CRO da landing page\n- "checklist": checklist de lançamento dividido em Time Técnico e Marketing/Design\n- "criacao": briefing de criação com tom, conceito e copies para 2-3 peças por plataforma\nSeja conciso em todas as seções.`,
         messages: [
           { role: 'user', content: textTruncado },
           { role: 'assistant', content: '{' },
@@ -121,9 +121,11 @@ module.exports = async function handler(req, res) {
     // 4. Atualizar data.json para renderização dinâmica na página
     const dataJson = JSON.stringify({
       updatedAt: new Date().toISOString(),
-      campanha: parsed.campanha || '',
-      anuncios: parsed.anuncios || '',
-      cro: parsed.cro || '',
+      campanha:  parsed.campanha  || '',
+      anuncios:  parsed.anuncios  || '',
+      cro:       parsed.cro       || '',
+      checklist: parsed.checklist || '',
+      criacao:   parsed.criacao   || '',
     }, null, 2);
     await updateGitHubFile('data.json', dataJson);
 
