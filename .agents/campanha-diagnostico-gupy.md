@@ -1,22 +1,27 @@
-## Estratégia
+## Estratégia de Campanha
 
-**Posicionamento:** Diagnóstico gratuito de maturidade IA/RH com especialista em RH (não vendedor). Foco em brutal facts: ROI real vs. automação custosa.
+**Posicionamento**: Diagnóstico gratuito (15 min) como porta de entrada para leads qualificados de RH.
 
-**Tensão Central:** Medo de irrelevância progressiva — CEO quer resultados, concorrentes avançam, orçamento em risco.
+**Mecânica**: 3 ângulos criativos testados simultaneamente (incerteza, pressão CEO, custo inação) → vencedor escalado semana 3.
 
-**Abordagem:** 3 ângulos paralelos (incerteza, pressão CEO, custo da inação) testados simultaneamente. Liderado por especialista, resultado prático, sem pitch.
+**Diferencial operacional**: 
+- Lead Gen Forms nativos no LinkedIn (reduz atrito 2–3x vs LP externa)
+- Sessão com especialista RH, não vendedor (endereça objeção principal)
+- Dados reais do Brasil, não teoria global
+
+**Cronograma**:
+- Semanas 1–2: Teste dos 3 ângulos (budget distribuído)
+- Semana 3: Escala vencedor (+40% budget)
+- Semanas 4: Otimização + retargeting agressivo
 
 ---
 
-## Budget (R$25.000/mês)
+## Alocação de Budget (R$25.000/mês)
 
-| Plataforma | Budget | Leads Est. | CPL Esperado |
+| Plataforma | Budget | CPL esperado | Leads est. |
 |---|---|---|---|
-| **LinkedIn** | R$10.000 (40%) | 40–55 | R$180–250 |
-| **Meta** | R$8.750 (35%) | 80–125 | R$70–110 |
-| **Google** | R$6.250 (25%) | 45–70 | R$90–140 |
-| **TOTAL** | **R$25.000** | **~165–250** | **~R$85–125** |
+| **LinkedIn** | R$10.000 (40%) | R$180–250 | 40–55 |
+| **Meta** | R$8.750 (35%) | R$70–110 | 80–125 |
+| **Google** | R$6.250 (25%) | R$90–140 | 45–70 |
 
-**Meta mensal:** 8–17 oportunidades (MQL→OPP 5–10%).
-
-**Teste semana 1:** 3 ângulos em paralelo. **Semana 3:** scale no vencedor (+60% budget).
+**Meta esperada**: 165–250 leads/mês → 8–17 oportunidades (5–10% MQL→OPP).
