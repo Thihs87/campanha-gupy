@@ -1777,8 +1777,8 @@ D4 - Pressão do CEO por ROI? Saiba onde sua área está na era da IA e o que pr
         const data = await res.json();
 
         if (res.ok && data.success) {
-          mostrarStatus('success', '✅ Briefing processado! A página será atualizada em 1–2 minutos.');
           resetUpload();
+          mostrarStatus('success', '✅ Briefing processado com sucesso! A página será atualizada em 1–2 minutos.');
         } else {
           mostrarStatus('error', '❌ Erro: ' + (data.error || 'Falha desconhecida'));
           btn.disabled = false;
