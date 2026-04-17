@@ -1,46 +1,28 @@
-# Recomendações de CRO
+## Recomendações de CRO
 
-## Landing Page (info.gupy.io/diagnostico-teste)
+### 1. **Landing Page**
+- **Remove atrito:** Link direto para Lead Gen Form (LinkedIn) — reduz abandono 2–3x vs. LP externa
+- **Copy defensivo acima da fold:** Destaque "Conduzido por especialista em RH — não pelo time comercial. Resultado prático independente de qualquer decisão de compra."
+- **Prova social:** Insira 2–3 depoimentos de CLs (execução + ROI % gerado)
+- **Calendário visível:** Mostrar 3–5 slots disponíveis (urgência)
 
-### 1. **Remoção de Fricção no Form**
-- Campos obrigatórios: apenas Nome, Email, Telefone, Empresa, Cargo.
-- Remover "Desafios atuais" (multi-select excessivo) ou mover para pós-agendamento.
-- **Resultado esperado**: +15–20% taxa de submissão.
+### 2. **Lead Gen Form (LinkedIn + Site)**
+- **Campos:** Nome, empresa (tamanho), cargo, email, telefone (apenas 5)
+- **Micro-copy:** "Sem spam. Especialista te liga em 24h."
+- **Confirmação:** SMS + email com slot marcado automaticamente
 
-### 2. **Objection Handling Acima da Dobra**
-- Inserir mini-seção visual com 3 bullets:
-  - ✅ Conduzido por especialista em RH — não pelo time comercial
-  - ✅ Resultado prático, independente de qualquer decisão de compra
-  - ✅ Sem follow-up agressivo — a menos que você queira conversar
-- **Resultado esperado**: Reduz hesitação de leads com objeção "é só um pitch".
+### 3. **Retargeting**
+- **Visitantes LP (30 dias):** Copy de objection handling ("É gratuito, então é pitch?" — NÃO, resultado prático)
+- **Budget:** +20% para retargeting (Meta + LinkedIn)
+- **Frequência cap:** Máx. 8 impressões/dia (evita ad fatigue)
 
-### 3. **Prova Social / Dados**
-- Inserir: "Diagnóstico baseado em análise de 500+ empresas brasileiras processadas pela Gupy."
-- Card com 1–2 resultados anônimos: "75% dos líderes de RH descobrem que estão no estágio 2 de 4 de maturidade de IA."
-- **Resultado esperado**: +10–15% confiança, redução de bounce.
+### 4. **Call Quality**
+- **Roteiro:** 15 min estruturado (não flexível). Diagnóstico + 2–3 recomendações claras
+- **Gatilho de venda:** Após diagnóstico, ofereça sessão strategy 1-on-1 (paga/premium) — não force no mesmo call
+- **Survey pós-call:** "Valor da sessão?" (NPS). Top 20% → nutrição automática
 
-### 4. **Clareza de Próximos Passos Pós-Submit**
-- Confirmação imediata: "Especialista entrará em contato em até 24h. Escolha um horário preferido:" [calendar integrado].
-- Redirecionar para página de sucesso com expectativa clara + link para calendário.
-- **Resultado esperado**: Reduz no-show em 20–30%.
-
-### 5. **Copy Defensivo na CTA**
-- Trocar: "Agendar diagnóstico" → **"Agendar diagnóstico (15 min, sem compromisso)"
-- Reforça duração + zero-pressure.
-
-### 6. **A/B Test Headlines**
-- **Variante A (Incerteza)**: "Seu RH está no caminho certo com IA? Descubra."
-- **Variante B (ROI)**: "O CEO quer saber o ROI do RH. Você tem a resposta?"
-- **Resultado esperado**: Medir qual ângulo converte melhor.
-
-## Pós-Submissão
-
-### 7. **Sequência de Email Defensiva (até agendamento)**
-- Email 1 (5 min pós-submit): Confirmação + calendário.
-- Email 2 (24h): Lembrança + mini-caso de uso (1 paragrafo, sem pitch).
-- **Resultado esperado**: +8–12% de shows agendados.
-
-### 8. **Rastreamento de Micro-Conversões**
-- Evento GA4: form_start, form_complete, calendar_click, appointment_booked.
-- Conectar com Salesforce para rastreio MQL → OPP.
-- **Resultado esperado**: Visibilidade real de drop-offs, otimização contínua.
+### 5. **Testes Prioritários**
+- **Semana 1:** 3 ângulos em paralelo (todos em budget proporcional)
+- **Semana 3:** Scale no ângulo com melhor CTR + CPL
+- **Meta week 3:** Reduzir CPL em 15–20% ou aumentar CVR em 10%
+- **Métrica de sucesso:** CPL ≤ R$120 + MQL→OPP ≥ 8%

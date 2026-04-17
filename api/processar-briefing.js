@@ -118,7 +118,16 @@ module.exports = async function handler(req, res) {
     await updateGitHubFile('.agents/anuncios-diagnostico-gupy.md', parsed.anuncios || '');
     await updateGitHubFile('.agents/cro-lp-diagnostico.md', parsed.cro || '');
 
-    // 4. Disparar redeploy no Vercel
+    // 4. Atualizar data.json para renderização dinâmica na página
+    const dataJson = JSON.stringify({
+      updatedAt: new Date().toISOString(),
+      campanha: parsed.campanha || '',
+      anuncios: parsed.anuncios || '',
+      cro: parsed.cro || '',
+    }, null, 2);
+    await updateGitHubFile('data.json', dataJson);
+
+    // 5. Disparar redeploy no Vercel
     await fetch(process.env.VERCEL_DEPLOY_HOOK, { method: 'POST' });
 
     return res.status(200).json({ success: true });
