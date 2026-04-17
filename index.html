@@ -116,6 +116,24 @@
     }
     .nav a:hover { color: var(--branco); background: rgba(255,255,255,.07); border-bottom-color: var(--anil); }
     .nav a .nav-icon { font-size: 15px; line-height: 1; }
+    .nav-upload-btn {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--verde);
+      color: var(--azul);
+      border: none;
+      border-radius: 6px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      white-space: nowrap;
+      transition: opacity .2s;
+    }
+    .nav-upload-btn:hover { opacity: .85; }
 
     /* ── LAYOUT ──────────────────────────────────────────────────────── */
     .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
@@ -637,6 +655,10 @@
     <a href="#criacao"><span class="nav-icon">🎨</span>Briefing de Criação</a>
     <a href="#lp"><span class="nav-icon">🖥️</span>Landing Page</a>
   </div>
+  <button class="nav-upload-btn" onclick="abrirUpload()">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    Atualizar Briefing
+  </button>
 </nav>
 
 <!-- ── ESTRATÉGIA ──────────────────────────────────────────────────────── -->
@@ -1562,10 +1584,6 @@ D4 - Pressão do CEO por ROI? Saiba onde sua área está na era da IA e o que pr
   sections.forEach(s => observer.observe(s));
 </script>
 
-<!-- ── BOTÃO FLUTUANTE UPLOAD ─────────────────────────────────────────── -->
-<button class="upload-fab" onclick="abrirUpload()" title="Atualizar briefing">
-  ↑ Atualizar Briefing
-</button>
 
 <!-- ── MODAL UPLOAD ──────────────────────────────────────────────────── -->
 <div class="upload-overlay" id="uploadOverlay" onclick="fecharUpload(event)">
@@ -1594,24 +1612,6 @@ D4 - Pressão do CEO por ROI? Saiba onde sua área está na era da IA e o que pr
 </div>
 
 <style>
-  .upload-fab {
-    position: fixed;
-    bottom: 32px;
-    right: 32px;
-    background: var(--verde);
-    color: var(--azul);
-    border: none;
-    border-radius: 50px;
-    padding: 14px 22px;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 20px rgba(0,0,0,.3);
-    z-index: 200;
-    transition: transform .15s, box-shadow .15s;
-    font-family: 'Inter', sans-serif;
-  }
-  .upload-fab:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(0,0,0,.4); }
 
   .upload-overlay {
     display: none;
