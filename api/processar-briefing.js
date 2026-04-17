@@ -5,22 +5,30 @@ const GITHUB_REPO = 'campanha-gupy';
 
 async function getFileSHA(path) {
   const res = await fetch(
-    `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`,
+    `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(path).replace(/%2F/g, '/')}`,
     { headers: { Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, Accept: 'application/vnd.github+json' } }
   );
-  if (!res.ok) return null;
-  return (await res.json()).sha;
+  if (!res.ok) {
+    console.log(`[getFileSHA] ${path} → ${res.status}`);
+    return null;
+  }
+  const data = await res.json();
+  console.log(`[getFileSHA] ${path} → sha: ${data.sha}`);
+  return data.sha;
 }
 
 async function updateGitHubFile(path, content) {
+  // Busca SHA atual — sem ele o GitHub rejeita com 409
   const sha = await getFileSHA(path);
   const body = {
     message: `chore: atualizar ${path.split('/').pop()} via upload`,
     content: Buffer.from(content).toString('base64'),
-    ...(sha ? { sha } : {}),
+    sha: sha, // sempre incluir — se null GitHub trata como criação e falha se existir
   };
+  if (!sha) delete body.sha; // arquivo novo: omite sha
+
   const res = await fetch(
-    `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`,
+    `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(path).replace(/%2F/g, '/')}`,
     {
       method: 'PUT',
       headers: {
@@ -105,12 +113,10 @@ module.exports = async function handler(req, res) {
       }
     }
 
-    // 3. Atualizar arquivos no GitHub
-    await Promise.all([
-      updateGitHubFile('.agents/campanha-diagnostico-gupy.md', parsed.campanha || ''),
-      updateGitHubFile('.agents/anuncios-diagnostico-gupy.md', parsed.anuncios || ''),
-      updateGitHubFile('.agents/cro-lp-diagnostico.md', parsed.cro || ''),
-    ]);
+    // 3. Atualizar arquivos no GitHub (sequencial para evitar conflito de SHA)
+    await updateGitHubFile('.agents/campanha-diagnostico-gupy.md', parsed.campanha || '');
+    await updateGitHubFile('.agents/anuncios-diagnostico-gupy.md', parsed.anuncios || '');
+    await updateGitHubFile('.agents/cro-lp-diagnostico.md', parsed.cro || '');
 
     // 4. Disparar redeploy no Vercel
     await fetch(process.env.VERCEL_DEPLOY_HOOK, { method: 'POST' });
