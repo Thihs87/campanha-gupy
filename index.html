@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Repositório de Campanha — Diagnóstico de Maturidade de RH · Gupy</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1075,7 +1075,9 @@
       secoes.forEach(({ id, key }) => {
         const el = document.getElementById(id);
         if (!el || !data[key]) return;
-        el.innerHTML = marked.parse(data[key]);
+        el.innerHTML = typeof marked.parse === 'function'
+          ? marked.parse(data[key])
+          : marked(data[key]);
       });
 
       // Update timestamp if present
