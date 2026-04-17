@@ -54,6 +54,9 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Não foi possível extrair texto do documento' });
     }
 
+    // Truncar texto se muito longo (limite seguro para o prompt)
+    const textTruncado = text.length > 12000 ? text.substring(0, 12000) + '\n[documento truncado]' : text;
+
     // 2. Enviar para Claude
     const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -63,29 +66,48 @@ module.exports = async function handler(req, res) {
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 4000,
-        system: `Você é um assistente de marketing da Gupy. Receberá o conteúdo de um briefing de campanha revisado extraído de um documento Word. Analise o conteúdo e retorne um JSON válido com exatamente 3 chaves:
-- "campanha": conteúdo Markdown com estratégia de mídia, budget e plataformas
-- "anuncios": conteúdo Markdown com todos os copies de anúncios para LinkedIn, Meta e Google
-- "cro": conteúdo Markdown com análise e recomendações de CRO da landing page
-Retorne APENAS o JSON, sem texto adicional.`,
-        messages: [{ role: 'user', content: text }],
+        model: 'claude-sonnet-4-6',
+        max_tokens: 6000,
+        system: `Você é um assistente de marketing da Gupy. Analise o briefing de campanha fornecido e retorne EXATAMENTE o seguinte JSON (sem nenhum texto antes ou depois):
+
+{"campanha":"CONTEUDO_MARKDOWN","anuncios":"CONTEUDO_MARKDOWN","cro":"CONTEUDO_MARKDOWN"}
+
+Onde:
+- campanha: estratégia de mídia, budget por plataforma e KPIs em Markdown
+- anuncios: copies completos dos anúncios para LinkedIn, Meta e Google em Markdown
+- cro: análise e recomendações de CRO da landing page em Markdown
+
+IMPORTANTE: Retorne SOMENTE o JSON. Nenhuma explicação. Nenhum texto adicional.`,
+        messages: [{ role: 'user', content: textTruncado }],
       }),
     });
 
     if (!claudeRes.ok) throw new Error(`Claude API: ${await claudeRes.text()}`);
 
     const claudeData = await claudeRes.json();
-    const responseText = claudeData.content[0].text;
+    const responseText = claudeData.content[0].text.trim();
+
+    console.log('[processar-briefing] Claude response preview:', responseText.substring(0, 200));
 
     let parsed;
     try {
+      // Tentar parse direto
       parsed = JSON.parse(responseText);
     } catch {
-      const match = responseText.match(/```(?:json)?\n?([\s\S]+?)\n?```/);
-      if (match) parsed = JSON.parse(match[1]);
-      else throw new Error('Claude não retornou JSON válido');
+      // Tentar extrair JSON de bloco de código
+      const codeBlock = responseText.match(/```(?:json)?\n?([\s\S]+?)\n?```/);
+      if (codeBlock) {
+        parsed = JSON.parse(codeBlock[1].trim());
+      } else {
+        // Tentar encontrar JSON entre chaves
+        const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          parsed = JSON.parse(jsonMatch[0]);
+        } else {
+          console.error('[processar-briefing] Resposta inválida:', responseText.substring(0, 500));
+          throw new Error('Claude não retornou JSON válido');
+        }
+      }
     }
 
     // 3. Atualizar arquivos no GitHub
