@@ -1,39 +1,46 @@
-## Recomendações de CRO
+# Recomendações de CRO
 
-### 1. **Lead Gen Form Nativa (LinkedIn — Prioridade Alta)**
-- Substituir redirecionamento para LP externa por **Lead Gen Forms nativos do LinkedIn**
-- Campo mínimo: Nome + Email + Cargo + Tamanho empresa
-- Reduz atrito e abandono em 2–3x vs. LP externa
-- **Teste A/B**: Adicionar campo "Qual é seu maior desafio com IA no RH?" vs. sem campo aberto
+## Landing Page (info.gupy.io/diagnostico-teste)
 
-### 2. **Landing Page (https://info.gupy.io/diagnostico-teste)**
-- **Hero**: Reforçar frase central: "Especialista em RH — não pelo time comercial. Sem pitch de vendas."
-- **Social proof**: Cards com dados reais (ex: "Avaliamos 50.000+ contratações/ano com IA")
-- **CTA duplicado**: Botão sticky no final da página (conversão móvel +15%)
-- **Remover abas/modais**: Fluxo linear, máximo 2 passos até agendamento
+### 1. **Remoção de Fricção no Form**
+- Campos obrigatórios: apenas Nome, Email, Telefone, Empresa, Cargo.
+- Remover "Desafios atuais" (multi-select excessivo) ou mover para pós-agendamento.
+- **Resultado esperado**: +15–20% taxa de submissão.
 
-### 3. **Redirecionamento Pós-Lead**
-- **Página de confirmação**: "Seu diagnóstico será em [dia/hora]. Preparamos 3 perguntas para aproveitar melhor os 15 min — veja aqui."
-- **SMS + Email sequência**: Dia 1 (confirmação) → Dia 3 (preparação) → 1h antes (reminder com link do Calendly)
-- Reduz no-show e melhora qualidade da sessão
+### 2. **Objection Handling Acima da Dobra**
+- Inserir mini-seção visual com 3 bullets:
+  - ✅ Conduzido por especialista em RH — não pelo time comercial
+  - ✅ Resultado prático, independente de qualquer decisão de compra
+  - ✅ Sem follow-up agressivo — a menos que você queira conversar
+- **Resultado esperado**: Reduz hesitação de leads com objeção "é só um pitch".
 
-### 4. **Retargeting Messenger + Email**
-- Visitantes LP que não converteram: Messenger ads "Achou pesado? Converse com a gente via chat" (+8% conversão)
-- Email sequence (dia 3, 5, 7): Sucesso case de empresa similar + CTA para formulário simplificado
+### 3. **Prova Social / Dados**
+- Inserir: "Diagnóstico baseado em análise de 500+ empresas brasileiras processadas pela Gupy."
+- Card com 1–2 resultados anônimos: "75% dos líderes de RH descobrem que estão no estágio 2 de 4 de maturidade de IA."
+- **Resultado esperado**: +10–15% confiança, redução de bounce.
 
-### 5. **Teste de Timing (Meta)**
-- Executivos de RH mais responsivos **terça–quinta, 8–11h**
-- Testar bidding reforçado nesse horário (+20% budget)
+### 4. **Clareza de Próximos Passos Pós-Submit**
+- Confirmação imediata: "Especialista entrará em contato em até 24h. Escolha um horário preferido:" [calendar integrado].
+- Redirecionar para página de sucesso com expectativa clara + link para calendário.
+- **Resultado esperado**: Reduz no-show em 20–30%.
 
-### 6. **Avaliação de Qualidade do Lead**
-- Score mínimo: Empresa 500+ func + cargo confirma (Coord/Gerente/Diretor RH)
-- Leads com empresa < 500 ou cargo incompatível: agrupar em nova audiência (Meta + retargeting desconto)
+### 5. **Copy Defensivo na CTA**
+- Trocar: "Agendar diagnóstico" → **"Agendar diagnóstico (15 min, sem compromisso)"
+- Reforça duração + zero-pressure.
 
-### 7. **Teste Criativo Rápido (Week 2)**
-- Vídeo 15s com especialista da Gupy falando direto para câmera (Meta): "15 minutos. Sem venda. Resultado prático." — testar vs. copy estático
-- **Meta esperada**: +25% engagement se vídeo vs. copy
+### 6. **A/B Test Headlines**
+- **Variante A (Incerteza)**: "Seu RH está no caminho certo com IA? Descubra."
+- **Variante B (ROI)**: "O CEO quer saber o ROI do RH. Você tem a resposta?"
+- **Resultado esperado**: Medir qual ângulo converte melhor.
 
-### 8. **Monitoramento de ROAS/LTV**
-- Rastrear até **OPP gerada** (não apenas lead)
-- Meta: 8–17 opps/mês com R$25k investido (ROAS mínimo 2–3x em pipeline)
-- Se < 5 opps: revisar qualidade de lead ou preparação da sessão
+## Pós-Submissão
+
+### 7. **Sequência de Email Defensiva (até agendamento)**
+- Email 1 (5 min pós-submit): Confirmação + calendário.
+- Email 2 (24h): Lembrança + mini-caso de uso (1 paragrafo, sem pitch).
+- **Resultado esperado**: +8–12% de shows agendados.
+
+### 8. **Rastreamento de Micro-Conversões**
+- Evento GA4: form_start, form_complete, calendar_click, appointment_booked.
+- Conectar com Salesforce para rastreio MQL → OPP.
+- **Resultado esperado**: Visibilidade real de drop-offs, otimização contínua.
