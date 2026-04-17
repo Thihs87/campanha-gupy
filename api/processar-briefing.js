@@ -67,25 +67,20 @@ module.exports = async function handler(req, res) {
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 4000,
-        system: `Você é um assistente de marketing da Gupy. Analise o briefing de campanha fornecido e retorne EXATAMENTE o seguinte JSON (sem nenhum texto antes ou depois):
-
-{"campanha":"CONTEUDO_MARKDOWN","anuncios":"CONTEUDO_MARKDOWN","cro":"CONTEUDO_MARKDOWN"}
-
-Onde:
-- campanha: estratégia de mídia, budget por plataforma e KPIs em Markdown
-- anuncios: copies completos dos anúncios para LinkedIn, Meta e Google em Markdown
-- cro: análise e recomendações de CRO da landing page em Markdown
-
-IMPORTANTE: Retorne SOMENTE o JSON. Nenhuma explicação. Nenhum texto adicional.`,
-        messages: [{ role: 'user', content: textTruncado }],
+        max_tokens: 5000,
+        system: `Você é um assistente de marketing da Gupy. Analise o briefing e retorne um JSON com 3 chaves: "campanha" (estratégia e budget em Markdown), "anuncios" (copies dos anúncios em Markdown), "cro" (recomendações de CRO em Markdown). Seja conciso.`,
+        messages: [
+          { role: 'user', content: textTruncado },
+          { role: 'assistant', content: '{' },
+        ],
       }),
     });
 
     if (!claudeRes.ok) throw new Error(`Claude API: ${await claudeRes.text()}`);
 
     const claudeData = await claudeRes.json();
-    const responseText = claudeData.content[0].text.trim();
+    // prefill force: Claude continua a partir de '{', precisamos recolocar
+    const responseText = ('{' + claudeData.content[0].text).trim();
 
     console.log('[processar-briefing] Claude response preview:', responseText.substring(0, 200));
 
