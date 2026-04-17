@@ -1652,13 +1652,6 @@ D4 - Pressão do CEO por ROI? Saiba onde sua área está na era da IA e o que pr
         const renderFn = typeof marked.parse === 'function' ? marked.parse : marked;
         el.innerHTML = renderFn(data[key]);
         el.style.display = 'block';
-
-        // Hide static siblings that follow this element
-        let next = el.nextElementSibling;
-        while (next) {
-          next.style.display = 'none';
-          next = next.nextElementSibling;
-        }
       });
 
       if (data.updatedAt) {
