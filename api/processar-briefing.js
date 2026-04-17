@@ -54,8 +54,8 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Não foi possível extrair texto do documento' });
     }
 
-    // Truncar texto se muito longo (limite seguro para o prompt)
-    const textTruncado = text.length > 12000 ? text.substring(0, 12000) + '\n[documento truncado]' : text;
+    // Truncar texto — limite conservador para caber no timeout do Vercel Hobby (10s)
+    const textTruncado = text.length > 7000 ? text.substring(0, 7000) + '\n[documento truncado]' : text;
 
     // 2. Enviar para Claude
     const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
@@ -66,8 +66,8 @@ module.exports = async function handler(req, res) {
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 6000,
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 4000,
         system: `Você é um assistente de marketing da Gupy. Analise o briefing de campanha fornecido e retorne EXATAMENTE o seguinte JSON (sem nenhum texto antes ou depois):
 
 {"campanha":"CONTEUDO_MARKDOWN","anuncios":"CONTEUDO_MARKDOWN","cro":"CONTEUDO_MARKDOWN"}
